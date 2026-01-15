@@ -1,6 +1,9 @@
-steamship==2.17.34
-google-generativeai
-aiohttp>=3.9.0
-pydantic<2
-scrapetube
-pytube
+langchain
+langchain-community
+langgraph
+langchain-google-genai
+python-telegram-bot
+python-dotenv
+pydantic
+requests
+aiohttp
