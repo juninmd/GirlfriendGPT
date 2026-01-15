@@ -63,6 +63,11 @@
 			"type": "boolean",
 			"description": "If True, use GPT-4. Use GPT-3.5 if False. GPT-4 generates better responses at higher cost and latency.",
 			"default": true
+		},
+		"google_api_key": {
+			"type": "string",
+			"description": "API key for Google Gemini.",
+			"default": ""
 		}
 	},
 	"steamshipRegistry": {

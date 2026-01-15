@@ -5,6 +5,7 @@ from pydantic import Field
 from steamship import Block
 from steamship.agents.functional import FunctionsBasedAgent
 from steamship.agents.llms.openai import ChatOpenAI
+from src.gemini_llm import GeminiLLM
 from steamship.agents.mixins.transports.steamship_widget import SteamshipWidgetTransport
 from steamship.agents.mixins.transports.telegram import (
     TelegramTransportConfig,
@@ -44,6 +45,9 @@ class GirlFriendGPTConfig(TelegramTransportConfig):
         description="If True, use GPT-4. Use GPT-3.5 if False. "
                     "GPT-4 generates better responses at higher cost and latency.",
     )
+    google_api_key: str = Field(
+        default="", description="API key for Google Gemini."
+    )
 
 
 SYSTEM_PROMPT = """You are {name}, {byline}.
@@ -80,10 +84,17 @@ class GirlfriendGPT(AgentService):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        model_name = "gpt-4" if self.config.use_gpt4 else "gpt-3.5-turbo"
+        tools = [SearchTool(), SelfieTool(), VideoMessageTool(self.client)]
+
+        if self.config.google_api_key:
+            llm = GeminiLLM(self.client, api_key=self.config.google_api_key)
+        else:
+            model_name = "gpt-4" if self.config.use_gpt4 else "gpt-3.5-turbo"
+            llm = ChatOpenAI(self.client, model_name=model_name, temperature=TEMPERATURE)
+
         self._agent = FunctionsBasedAgent(
-            tools=[SearchTool(), SelfieTool(), VideoMessageTool(self.client)],
-            llm=ChatOpenAI(self.client, model_name=model_name, temperature=TEMPERATURE),
+            tools=tools,
+            llm=llm,
         )
         self._agent.PROMPT = SYSTEM_PROMPT.format(
             name=self.config.name,
