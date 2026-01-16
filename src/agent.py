@@ -21,9 +21,9 @@ def create_agent(personality: Personality):
     # Initialize LLM with Gemini
     # We use a high-performance model. gemini-1.5-flash is fast and cheap. gemini-1.5-pro is smarter.
     # User said "update to 2026", so assume we want good quality. 1.5-flash is default in api.py before.
-    # I'll use gemini-1.5-flash as it is efficient for chatbots.
+    # I'll use gemini-1.5-pro as it is the standard for high-quality interactions in 2026.
     llm = ChatGoogleGenerativeAI(
-        model="gemini-1.5-flash",
+        model="gemini-1.5-pro",
         api_key=Config.GOOGLE_API_KEY,
         temperature=0.7,
         max_tokens=None,
