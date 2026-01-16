@@ -1,8 +1,11 @@
 import os
 import requests
+import tempfile
 from typing import Optional, Type
 from langchain_core.tools import BaseTool
 from pydantic import BaseModel, Field
+from google import genai
+from google.genai import types
 from src.config import Config
 
 class SelfieToolInput(BaseModel):
@@ -14,10 +17,33 @@ class SelfieTool(BaseTool):
     args_schema: Type[BaseModel] = SelfieToolInput
 
     def _run(self, description: str) -> str:
-        # Placeholder implementation
-        # In a real 2026 scenario, this would call Gemini's image generation or another API.
+        if not Config.GOOGLE_API_KEY:
+             return "Image generation is not configured (missing GOOGLE_API_KEY)."
+
         print(f"[SelfieTool] Generating selfie for: {description}")
-        return f"I've snapped a selfie for you! (Imagine a photo of me: {description})"
+
+        try:
+            client = genai.Client(api_key=Config.GOOGLE_API_KEY)
+            # Use 'imagen-4.0-generate-001' for high fidelity "2026" results.
+            response = client.models.generate_images(
+                model='imagen-4.0-generate-001',
+                prompt=description,
+                config=types.GenerateImagesConfig(
+                    number_of_images=1,
+                )
+            )
+
+            if response.generated_images:
+                image_bytes = response.generated_images[0].image.image_bytes
+
+                with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as f:
+                    f.write(image_bytes)
+                    return f"IMAGE_GENERATED:{f.name}"
+            else:
+                 return "Failed to generate image (no images returned)."
+
+        except Exception as e:
+            return f"Error generating selfie: {str(e)}"
 
     async def _arun(self, description: str) -> str:
         # Async implementation
@@ -53,14 +79,7 @@ class VoiceTool(BaseTool):
         try:
             response = requests.post(url, json=data, headers=headers)
             if response.status_code == 200:
-                # In a real app, we would save the audio and return a path or URL.
-                # For now, let's assume we save it to a temp file or return a success message.
-                # Since this is a tool usage, we return a string indicating success.
-                # The actual audio handling would need to be done by the bot (sending the file).
-                # But tools usually return text to the LLM.
-                # Maybe the tool should return "Audio generated at <path>".
-                # Let's save to a temporary file.
-                import tempfile
+                # Save to a temporary file.
                 with tempfile.NamedTemporaryFile(suffix=".mp3", delete=False) as f:
                     f.write(response.content)
                     return f"AUDIO_GENERATED:{f.name}"

@@ -2,6 +2,7 @@ import argparse
 import asyncio
 import logging
 import sys
+import os
 from typing import Dict
 
 from telegram import Update
@@ -126,10 +127,31 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
                             await context.bot.send_chat_action(chat_id=chat_id, action="upload_voice")
                             with open(path, "rb") as audio:
                                 await context.bot.send_voice(chat_id=chat_id, voice=audio)
+
+                            # Cleanup
+                            try:
+                                os.remove(path)
+                            except Exception as e:
+                                logger.warning(f"Failed to remove temp file {path}: {e}")
+
                         except Exception as e:
                             logger.error(f"Failed to send voice: {e}")
-                    # For SelfieTool (mock), if we had a protocol:
-                    # if "IMAGE_GENERATED:" in content: ...
+
+                    if "IMAGE_GENERATED:" in content:
+                        try:
+                            path = content.split("IMAGE_GENERATED:")[1].strip()
+                            await context.bot.send_chat_action(chat_id=chat_id, action="upload_photo")
+                            with open(path, "rb") as photo:
+                                await context.bot.send_photo(chat_id=chat_id, photo=photo)
+
+                            # Cleanup
+                            try:
+                                os.remove(path)
+                            except Exception as e:
+                                logger.warning(f"Failed to remove temp file {path}: {e}")
+
+                        except Exception as e:
+                            logger.error(f"Failed to send photo: {e}")
 
     except Exception as e:
         logger.error(f"Error processing message: {e}")
