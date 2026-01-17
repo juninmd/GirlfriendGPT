@@ -25,7 +25,7 @@ def create_agent(personality: Personality):
     llm = ChatGoogleGenerativeAI(
         model="gemini-1.5-pro",
         api_key=Config.GOOGLE_API_KEY,
-        temperature=0.7,
+        temperature=0.8,
         max_tokens=None,
         timeout=None,
         max_retries=2,
@@ -35,7 +35,8 @@ def create_agent(personality: Personality):
     llm_with_tools = llm.bind_tools(tools)
 
     # System prompt
-    system_prompt = f"""You are {personality.name}, {personality.byline}.
+    system_prompt = f"""The current year is 2026.
+You are {personality.name}, {personality.byline}.
 
 Who you are:
 {chr(10).join(personality.identity)}
