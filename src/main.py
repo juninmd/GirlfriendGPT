@@ -80,7 +80,7 @@ async def cli_loop():
 # Telegram Bot Handlers
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    await update.message.reply_text("Hello! I am your AI companion. updated for 2026.")
+    await update.message.reply_text("Hello! I'm your AI companion, powered by the latest Gemini technology (2026 Edition). How are you doing today?")
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     user_id = update.effective_user.id
