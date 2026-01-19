@@ -21,6 +21,11 @@ class Config:
     ELEVENLABS_API_KEY = os.getenv("ELEVENLABS_API_KEY")
     ELEVENLABS_VOICE_ID = os.getenv("ELEVENLABS_VOICE_ID", "21m00Tcm4TlvDq8ikWAM") # Default voice
 
+    # New configuration for LLM provider
+    LLM_PROVIDER = os.getenv("LLM_PROVIDER", "google") # 'google' or 'ollama'
+    OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
+    OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3") # Default model for Ollama
+
     @staticmethod
     def load_personalities(personalities_dir: str = "src/personalities") -> Dict[str, Personality]:
         personalities = {}
@@ -41,6 +46,6 @@ class Config:
 
     @staticmethod
     def validate():
-        if not Config.GOOGLE_API_KEY:
+        if Config.LLM_PROVIDER == "google" and not Config.GOOGLE_API_KEY:
             raise ValueError("GOOGLE_API_KEY environment variable is not set.")
         # Telegram token is optional for CLI mode, but generally required for the bot
