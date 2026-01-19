@@ -33,7 +33,7 @@ class TestAgentSetup(unittest.TestCase):
 
         # Verify LLM was initialized with correct model
         mock_llm.assert_called_with(
-            model="gemini-1.5-pro",
+            model="gemini-2.5-pro",
             api_key='fake_key',
             temperature=0.8,
             max_tokens=None,
