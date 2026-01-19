@@ -2,6 +2,7 @@ from typing import Annotated, Literal, TypedDict, Union
 
 from langchain_core.messages import BaseMessage, HumanMessage, SystemMessage
 from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_ollama import ChatOllama
 from langgraph.graph import StateGraph, END
 from langgraph.graph.message import add_messages
 from langgraph.prebuilt import ToolNode, tools_condition
@@ -18,18 +19,24 @@ class AgentState(TypedDict):
     messages: Annotated[list[BaseMessage], add_messages]
 
 def create_agent(personality: Personality):
-    # Initialize LLM with Gemini
-    # We use a high-performance model. gemini-1.5-flash is fast and cheap. gemini-1.5-pro is smarter.
-    # User said "update to 2026", so assume we want good quality. 1.5-flash is default in api.py before.
-    # I'll use gemini-1.5-pro as it is the standard for high-quality interactions in 2026.
-    llm = ChatGoogleGenerativeAI(
-        model="gemini-1.5-pro",
-        api_key=Config.GOOGLE_API_KEY,
-        temperature=0.8,
-        max_tokens=None,
-        timeout=None,
-        max_retries=2,
-    )
+    # Initialize LLM based on provider
+    if Config.LLM_PROVIDER == "ollama":
+        llm = ChatOllama(
+            model=Config.OLLAMA_MODEL,
+            base_url=Config.OLLAMA_BASE_URL,
+            temperature=0.8,
+        )
+    else:
+        # Default to Google Gemini
+        # Using gemini-2.5-pro as requested for 2026 context
+        llm = ChatGoogleGenerativeAI(
+            model="gemini-2.5-pro",
+            api_key=Config.GOOGLE_API_KEY,
+            temperature=0.8,
+            max_tokens=None,
+            timeout=None,
+            max_retries=2,
+        )
 
     # Bind tools
     llm_with_tools = llm.bind_tools(tools)
@@ -55,10 +62,6 @@ If the user asks for a voice message or you want to speak, use the VoiceTool.
         # For simplicity in this graph, we assume the system message is injected at start of conversation
         # or we prepend it here if we want to be stateless regarding system prompt.
         # But langgraph state accumulates.
-
-        # We will prepend system prompt to the list sent to LLM, but not add it to state every time?
-        # Or we add it once at initialization.
-        # Let's prepend it for the call.
 
         conversation_messages = [SystemMessage(content=system_prompt)] + messages
         response = llm_with_tools.invoke(conversation_messages)
