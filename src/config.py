@@ -18,8 +18,7 @@ class Personality(BaseModel):
 class Config:
     TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
     GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
-    ELEVENLABS_API_KEY = os.getenv("ELEVENLABS_API_KEY")
-    ELEVENLABS_VOICE_ID = os.getenv("ELEVENLABS_VOICE_ID", "21m00Tcm4TlvDq8ikWAM") # Default voice
+    EDGE_TTS_VOICE = os.getenv("EDGE_TTS_VOICE", "en-US-AriaNeural")
 
     # New configuration for LLM provider
     LLM_PROVIDER = os.getenv("LLM_PROVIDER", "google") # 'google' or 'ollama'
