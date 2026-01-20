@@ -7,6 +7,8 @@ from pydantic import BaseModel, Field
 from google import genai
 from google.genai import types
 from src.config import Config
+import edge_tts
+import asyncio
 
 class SelfieToolInput(BaseModel):
     description: str = Field(description="A description of the selfie to generate.")
@@ -57,36 +59,29 @@ class VoiceTool(BaseTool):
     description: str = "Generates spoken audio from text. Use this to send a voice message."
     args_schema: Type[BaseModel] = VoiceToolInput
 
-    def _run(self, text: str) -> str:
-        if not Config.ELEVENLABS_API_KEY:
-            return "Voice generation is not configured (missing API key)."
+    async def _arun(self, text: str) -> str:
+        if not Config.EDGE_TTS_VOICE:
+            return "Voice generation is not configured (missing EDGE_TTS_VOICE)."
 
-        url = f"https://api.elevenlabs.io/v1/text-to-speech/{Config.ELEVENLABS_VOICE_ID}"
-        headers = {
-            "Accept": "audio/mpeg",
-            "Content-Type": "application/json",
-            "xi-api-key": Config.ELEVENLABS_API_KEY
-        }
-        data = {
-            "text": text,
-            "model_id": "eleven_monolingual_v1",
-            "voice_settings": {
-                "stability": 0.5,
-                "similarity_boost": 0.5
-            }
-        }
+        print(f"[VoiceTool] Generating voice for: {text}")
 
         try:
-            response = requests.post(url, json=data, headers=headers)
-            if response.status_code == 200:
-                # Save to a temporary file.
-                with tempfile.NamedTemporaryFile(suffix=".mp3", delete=False) as f:
-                    f.write(response.content)
-                    return f"AUDIO_GENERATED:{f.name}"
-            else:
-                return f"Error generating voice: {response.text}"
-        except Exception as e:
-            return f"Exception during voice generation: {str(e)}"
+            communicate = edge_tts.Communicate(text, Config.EDGE_TTS_VOICE)
+            with tempfile.NamedTemporaryFile(suffix=".mp3", delete=False) as f:
+                temp_filename = f.name
+            
+            # edge-tts save is async
+            await communicate.save(temp_filename)
+            return f"AUDIO_GENERATED:{temp_filename}"
 
-    async def _arun(self, text: str) -> str:
-        return self._run(text)
+        except Exception as e:
+            return f"Error generating voice: {str(e)}"
+
+    def _run(self, text: str) -> str:
+        # Fallback for sync execution, though not recommended in async app
+        try:
+             return asyncio.run(self._arun(text))
+        except RuntimeError:
+             # If loop is already running, we can't use asyncio.run. 
+             # Refactoring to full async architecture is best, but for now:
+             return "Error: Async event loop already running, cannot call synchronous _run. Please ensure the agent uses ainvoke."
