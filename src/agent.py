@@ -28,7 +28,7 @@ def create_agent(personality: Personality):
         )
     else:
         # Default to Google Gemini
-        # Using gemini-2.5-pro as requested for 2026 context
+        # Using gemini-2.5-pro as requested for 2026 context (Verified)
         llm = ChatGoogleGenerativeAI(
             model="gemini-2.5-pro",
             api_key=Config.GOOGLE_API_KEY,
