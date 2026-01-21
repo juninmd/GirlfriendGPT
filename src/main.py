@@ -91,12 +91,12 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     # We could allow user to switch personalities.
     p_name = context.user_data.get("personality", "sacha")
 
-    agent = get_agent_for_user(p_name)
-    thread_id = str(chat_id)
-    config = {"configurable": {"thread_id": thread_id}}
-
     # Invoke agent
     try:
+        agent = get_agent_for_user(p_name)
+        thread_id = str(chat_id)
+        config = {"configurable": {"thread_id": thread_id}}
+
         input_message = HumanMessage(content=text)
         # Show typing status
         await context.bot.send_chat_action(chat_id=chat_id, action="typing")
@@ -189,4 +189,4 @@ def main():
         pass
 
 if __name__ == "__main__":
-    main()
+    main()  # pragma: no cover
