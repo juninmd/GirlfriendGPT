@@ -10,3 +10,4 @@ requests
 aiohttp
 google-genai
 edge-tts
+pytest-asyncio>=0.23.0
