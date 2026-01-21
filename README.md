@@ -4,7 +4,7 @@ Your personal AI companion, updated for the modern era using **Google Gemini**, 
 
 ## Features
 
-* **Google Gemini Integration**: Powered by the latest Gemini models for smart and fast conversations.
+* **Google Gemini Integration**: Powered by the latest Gemini models (Gemini 2.5 Pro) for smart and fast conversations.
 * **Custom Voice**: Utilize ElevenLabs to create a unique voice for your AI model.
 * **Telegram Bot**: Directly send and receive messages from your AI companion via Telegram.
 * **CLI Mode**: Chat with your companion directly in your terminal.
