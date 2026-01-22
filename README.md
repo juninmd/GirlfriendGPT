@@ -5,7 +5,7 @@ Your personal AI companion, updated for the modern era using **Google Gemini**, 
 ## Features
 
 * **Google Gemini Integration**: Powered by the latest Gemini models (Gemini 2.5 Pro) for smart and fast conversations.
-* **Custom Voice**: Utilize ElevenLabs to create a unique voice for your AI model.
+* **Custom Voice**: Uses `edge-tts` for high-quality, free text-to-speech.
 * **Telegram Bot**: Directly send and receive messages from your AI companion via Telegram.
 * **CLI Mode**: Chat with your companion directly in your terminal.
 * **Personality**: Customize the AI's personality via JSON files.
@@ -16,7 +16,6 @@ Your personal AI companion, updated for the modern era using **Google Gemini**, 
 * Python 3.9+
 * Google Gemini API Key
 * (Optional) Telegram Bot Token
-* (Optional) ElevenLabs API Key
 
 ## Installation
 
@@ -29,8 +28,8 @@ Your personal AI companion, updated for the modern era using **Google Gemini**, 
    ```bash
    GOOGLE_API_KEY=your_gemini_key
    TELEGRAM_TOKEN=your_telegram_token
-   ELEVENLABS_API_KEY=your_elevenlabs_key
-   ELEVENLABS_VOICE_ID=your_voice_id
+   # Optional: Configure voice (default: en-US-AriaNeural)
+   EDGE_TTS_VOICE=en-US-AriaNeural
    ```
 
 ## Usage
