@@ -1,7 +1,5 @@
-import os
-import requests
 import tempfile
-from typing import Optional, Type
+from typing import Type
 from langchain_core.tools import BaseTool
 from pydantic import BaseModel, Field
 from google import genai
@@ -35,12 +33,15 @@ class SelfieTool(BaseTool):
                 )
             )
 
-            if response.generated_images:
+            if response.generated_images and response.generated_images[0].image:
                 image_bytes = response.generated_images[0].image.image_bytes
 
-                with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as f:
-                    f.write(image_bytes)
-                    return f"IMAGE_GENERATED:{f.name}"
+                if image_bytes:
+                    with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as f:
+                        f.write(image_bytes)
+                        return f"IMAGE_GENERATED:{f.name}"
+                else:
+                    return "Failed to generate image (no image bytes)."
             else:
                  return "Failed to generate image (no images returned)."
 

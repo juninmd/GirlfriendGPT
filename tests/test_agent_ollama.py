@@ -55,7 +55,7 @@ class TestAgentOllama(unittest.TestCase):
         # Mock Config to use google (default)
         with patch.object(Config, 'LLM_PROVIDER', 'google'), \
              patch.object(Config, 'GOOGLE_API_KEY', 'fake_key'):
-             app = create_agent(self.personality)
+             create_agent(self.personality)
 
         # Verify LLM was initialized with gemini-2.5-pro
         mock_llm.assert_called_with(
