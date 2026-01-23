@@ -179,6 +179,11 @@ def main():
     parser.add_argument("--cli", action="store_true", help="Run in CLI mode")
     args = parser.parse_args()
 
+    print("---------------------------------------")
+    print("GirlfriendGPT - 2026 Edition")
+    print("Powered by Google Gemini 2.5 Pro")
+    print("---------------------------------------")
+
     # Run async loop
     try:
         if args.cli:
