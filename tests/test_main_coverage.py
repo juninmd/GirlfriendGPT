@@ -1,11 +1,8 @@
 import pytest
-import asyncio
-import sys
-import runpy
 from unittest.mock import patch, MagicMock, AsyncMock, mock_open
 from src.main import get_agent_for_user, cli_loop, start, handle_message, bot_loop, main
 from src.config import Config, Personality
-from telegram import Update, User, Chat, Message
+from telegram import Update
 from langchain_core.messages import AIMessage, ToolMessage, HumanMessage
 
 # --- Tests for src/main.py ---
@@ -295,7 +292,7 @@ async def test_bot_loop_no_token():
 def test_main_cli():
     with patch("argparse.ArgumentParser.parse_args") as mock_args:
         mock_args.return_value.cli = True
-        with patch("src.main.cli_loop") as mock_loop: # async func
+        with patch("src.main.cli_loop"): # async func
              # main calls asyncio.run(cli_loop())
              # we mock asyncio.run
              with patch("asyncio.run") as mock_run:
@@ -305,7 +302,7 @@ def test_main_cli():
 def test_main_bot():
     with patch("argparse.ArgumentParser.parse_args") as mock_args:
         mock_args.return_value.cli = False
-        with patch("src.main.bot_loop") as mock_loop:
+        with patch("src.main.bot_loop"):
              with patch("asyncio.run") as mock_run:
                  main()
                  mock_run.assert_called()
@@ -313,7 +310,7 @@ def test_main_bot():
 def test_main_keyboard_interrupt():
     with patch("argparse.ArgumentParser.parse_args") as mock_args:
         mock_args.return_value.cli = False
-        with patch("src.main.bot_loop") as mock_loop:
+        with patch("src.main.bot_loop"):
              with patch("asyncio.run", side_effect=KeyboardInterrupt):
                  main()
                  # Should just exit gracefully
@@ -354,3 +351,25 @@ async def test_cli_loop_invalid_personality():
                  with patch("builtins.print") as mock_print:
                      await cli_loop()
                      mock_print.assert_any_call("Personality invalid not found. Using default.")
+
+@pytest.mark.asyncio
+async def test_handle_message_ignored_updates():
+    context = MagicMock()
+
+    # Test update without effective_chat
+    update_no_chat = MagicMock(spec=Update)
+    update_no_chat.effective_chat = None
+    await handle_message(update_no_chat, context)
+    # Should just return
+
+    # Test update without message
+    update_no_msg = MagicMock(spec=Update)
+    update_no_msg.effective_chat = MagicMock()
+    update_no_msg.message = None
+    await handle_message(update_no_msg, context)
+
+    # Test update without text
+    update_no_text = MagicMock(spec=Update)
+    update_no_text.effective_chat = MagicMock()
+    update_no_text.message.text = None
+    await handle_message(update_no_text, context)

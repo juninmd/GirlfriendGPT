@@ -11,3 +11,7 @@ aiohttp
 google-genai
 edge-tts
 pytest-asyncio>=0.23.0
+ruff
+mypy
+types-requests
+types-PyYAML
