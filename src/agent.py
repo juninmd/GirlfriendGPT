@@ -1,9 +1,9 @@
-from typing import Annotated, Literal, TypedDict, Union
+from typing import Annotated, TypedDict, Union
 
-from langchain_core.messages import BaseMessage, HumanMessage, SystemMessage
+from langchain_core.messages import BaseMessage, SystemMessage
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_ollama import ChatOllama
-from langgraph.graph import StateGraph, END
+from langgraph.graph import StateGraph
 from langgraph.graph.message import add_messages
 from langgraph.prebuilt import ToolNode, tools_condition
 from langgraph.checkpoint.memory import MemorySaver
@@ -20,6 +20,7 @@ class AgentState(TypedDict):
 
 def create_agent(personality: Personality):
     # Initialize LLM based on provider
+    llm: Union[ChatOllama, ChatGoogleGenerativeAI]
     if Config.LLM_PROVIDER == "ollama":
         llm = ChatOllama(
             model=Config.OLLAMA_MODEL,

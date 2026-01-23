@@ -27,7 +27,7 @@ class Config:
 
     @staticmethod
     def load_personalities(personalities_dir: str = "src/personalities") -> Dict[str, Personality]:
-        personalities = {}
+        personalities: Dict[str, Personality] = {}
         path = Path(personalities_dir)
         if not path.exists():
             return personalities
