@@ -1,5 +1,4 @@
 import pytest
-import asyncio
 from unittest.mock import patch, MagicMock, AsyncMock
 from src.tools import SelfieTool, VoiceTool
 from src.config import Config
@@ -37,6 +36,20 @@ class TestSelfieTool:
             with patch("src.tools.genai.Client") as MockClient:
                 mock_response = MagicMock()
                 mock_response.generated_images = []
+
+                MockClient.return_value.models.generate_images.return_value = mock_response
+
+                tool = SelfieTool()
+                result = tool._run("a selfie")
+                assert "Failed to generate image" in result
+
+    def test_run_failure_no_image_bytes(self):
+        with patch.object(Config, "GOOGLE_API_KEY", "dummy"):
+            with patch("src.tools.genai.Client") as MockClient:
+                mock_response = MagicMock()
+                mock_image = MagicMock()
+                mock_image.image.image_bytes = None
+                mock_response.generated_images = [mock_image]
 
                 MockClient.return_value.models.generate_images.return_value = mock_response
 

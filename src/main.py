@@ -1,13 +1,12 @@
 import argparse
 import asyncio
 import logging
-import sys
 import os
-from typing import Dict
+from typing import Dict, Any
 
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
-from langchain_core.messages import HumanMessage, AIMessage, ToolMessage
+from langchain_core.messages import HumanMessage, ToolMessage
 
 from src.config import Config, Personality
 from src.agent import create_agent
@@ -19,9 +18,9 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Global agents cache: personality_name -> compiled_graph
-agents = {}
+agents: Dict[str, Any] = {}
 # Global personalities
-personalities = {}
+personalities: Dict[str, Personality] = {}
 
 def get_agent_for_user(personality_name: str):
     if personality_name not in agents:
@@ -80,16 +79,21 @@ async def cli_loop():
 # Telegram Bot Handlers
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    await update.message.reply_text("Hello! I'm your AI companion, powered by the latest Gemini technology (2026 Edition). How are you doing today?")
+    if update.message:
+        await update.message.reply_text("Hello! I'm your AI companion, powered by the latest Gemini technology (2026 Edition). How are you doing today?")
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    user_id = update.effective_user.id
+    if not update.effective_chat or not update.message or not update.message.text:
+        return
+
     chat_id = update.effective_chat.id
     text = update.message.text
 
     # Determine personality. For now, hardcoded or stored in user_data
     # We could allow user to switch personalities.
-    p_name = context.user_data.get("personality", "sacha")
+    p_name = "sacha"
+    if context.user_data:
+        p_name = context.user_data.get("personality", "sacha")
 
     # Invoke agent
     try:
@@ -106,7 +110,8 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         last_msg = response["messages"][-1]
         response_text = last_msg.content
 
-        await update.message.reply_text(response_text)
+        if update.message:
+            await update.message.reply_text(response_text)
 
         # Handle media from tools
         messages = response["messages"]
@@ -155,7 +160,8 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
 
     except Exception as e:
         logger.error(f"Error processing message: {e}")
-        await update.message.reply_text("I'm having trouble thinking right now.")
+        if update.message:
+            await update.message.reply_text("I'm having trouble thinking right now.")
 
 async def bot_loop():
     if not Config.TELEGRAM_TOKEN:

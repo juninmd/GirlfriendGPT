@@ -1,6 +1,6 @@
 import pytest
 from unittest.mock import patch, MagicMock
-from src.agent import create_agent, AgentState
+from src.agent import create_agent
 from src.config import Personality, Config
 from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
 
@@ -18,8 +18,8 @@ def mock_personality():
 def test_create_agent_ollama(mock_personality):
     with patch.object(Config, "LLM_PROVIDER", "ollama"):
         with patch("src.agent.ChatOllama") as MockOllama:
-            with patch("src.agent.StateGraph") as MockGraph:
-                 app = create_agent(mock_personality)
+            with patch("src.agent.StateGraph"):
+                 create_agent(mock_personality)
                  MockOllama.assert_called_once()
                  # We can check if args were passed correctly
                  assert MockOllama.call_args[1]["model"] == Config.OLLAMA_MODEL
@@ -27,8 +27,8 @@ def test_create_agent_ollama(mock_personality):
 def test_create_agent_google(mock_personality):
     with patch.object(Config, "LLM_PROVIDER", "google"):
         with patch("src.agent.ChatGoogleGenerativeAI") as MockGoogle:
-            with patch("src.agent.StateGraph") as MockGraph:
-                app = create_agent(mock_personality)
+            with patch("src.agent.StateGraph"):
+                create_agent(mock_personality)
                 MockGoogle.assert_called_once()
                 assert MockGoogle.call_args[1]["model"] == "gemini-2.5-pro"
 
