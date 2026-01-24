@@ -8,8 +8,10 @@ from src.config import Config
 import edge_tts
 import asyncio
 
+
 class SelfieToolInput(BaseModel):
     description: str = Field(description="A description of the selfie to generate.")
+
 
 class SelfieTool(BaseTool):
     name: str = "SelfieTool"
@@ -33,11 +35,11 @@ class SelfieTool(BaseTool):
         try:
             # Use 'imagen-3.0-generate-001' for high fidelity "2026" results.
             response = client.models.generate_images(
-                model='imagen-3.0-generate-001',
+                model="imagen-3.0-generate-001",
                 prompt=description,
                 config=types.GenerateImagesConfig(
                     number_of_images=1,
-                )
+                ),
             )
 
             if response.generated_images and response.generated_images[0].image:
@@ -50,7 +52,7 @@ class SelfieTool(BaseTool):
                 else:
                     return "Failed to generate image (no image bytes)."
             else:
-                 return "Failed to generate image (no images returned)."
+                return "Failed to generate image (no images returned)."
 
         except Exception as e:
             return f"Error generating selfie: {str(e)}"
@@ -88,12 +90,16 @@ class SelfieTool(BaseTool):
         except Exception as e:
             return f"Error generating selfie: {str(e)}"
 
+
 class VoiceToolInput(BaseModel):
     text: str = Field(description="The text to speak.")
 
+
 class VoiceTool(BaseTool):
     name: str = "VoiceTool"
-    description: str = "Generates spoken audio from text. Use this to send a voice message."
+    description: str = (
+        "Generates spoken audio from text. Use this to send a voice message."
+    )
     args_schema: Type[BaseModel] = VoiceToolInput
 
     async def _arun(self, text: str) -> str:
@@ -106,7 +112,7 @@ class VoiceTool(BaseTool):
             communicate = edge_tts.Communicate(text, Config.EDGE_TTS_VOICE)
             with tempfile.NamedTemporaryFile(suffix=".mp3", delete=False) as f:
                 temp_filename = f.name
-            
+
             # edge-tts save is async
             await communicate.save(temp_filename)
             return f"AUDIO_GENERATED:{temp_filename}"
@@ -117,8 +123,8 @@ class VoiceTool(BaseTool):
     def _run(self, text: str) -> str:
         # Fallback for sync execution, though not recommended in async app
         try:
-             return asyncio.run(self._arun(text))
+            return asyncio.run(self._arun(text))
         except RuntimeError:
-             # If loop is already running, we can't use asyncio.run. 
-             # Refactoring to full async architecture is best, but for now:
-             return "Error: Async event loop already running, cannot call synchronous _run. Please ensure the agent uses ainvoke."
+            # If loop is already running, we can't use asyncio.run.
+            # Refactoring to full async architecture is best, but for now:
+            return "Error: Async event loop already running, cannot call synchronous _run. Please ensure the agent uses ainvoke."

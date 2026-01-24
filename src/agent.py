@@ -14,9 +14,11 @@ from src.tools import SelfieTool, VoiceTool
 # Define the tools
 tools = [SelfieTool(), VoiceTool()]
 
+
 # Define the state
 class AgentState(TypedDict):
     messages: Annotated[list[BaseMessage], add_messages]
+
 
 def create_agent(personality: Personality):
     # Initialize LLM based on provider

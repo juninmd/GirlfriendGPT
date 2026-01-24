@@ -6,23 +6,26 @@ from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
 
 # --- Tests for src/agent.py ---
 
+
 @pytest.fixture
 def mock_personality():
     return Personality(
         name="TestBot",
         byline="A test bot",
         identity=["I am a robot"],
-        behavior=["Beep boop"]
+        behavior=["Beep boop"],
     )
+
 
 def test_create_agent_ollama(mock_personality):
     with patch.object(Config, "LLM_PROVIDER", "ollama"):
         with patch("src.agent.ChatOllama") as MockOllama:
             with patch("src.agent.StateGraph"):
-                 create_agent(mock_personality)
-                 MockOllama.assert_called_once()
-                 # We can check if args were passed correctly
-                 assert MockOllama.call_args[1]["model"] == Config.OLLAMA_MODEL
+                create_agent(mock_personality)
+                MockOllama.assert_called_once()
+                # We can check if args were passed correctly
+                assert MockOllama.call_args[1]["model"] == Config.OLLAMA_MODEL
+
 
 def test_create_agent_google(mock_personality):
     with patch.object(Config, "LLM_PROVIDER", "google"):
@@ -32,6 +35,7 @@ def test_create_agent_google(mock_personality):
                 MockGoogle.assert_called_once()
                 assert MockGoogle.call_args[1]["model"] == "gemini-2.5-pro"
 
+
 def test_chatbot_node_logic(mock_personality):
     # We need to test the internal 'chatbot' function.
     # It's defined inside create_agent, so we can't import it directly.
@@ -40,10 +44,10 @@ def test_chatbot_node_logic(mock_personality):
     # But for full coverage, we just need to run the graph or Mock the LLM correctly.
 
     with patch.object(Config, "LLM_PROVIDER", "google"):
-         with patch("src.agent.ChatGoogleGenerativeAI") as MockLLMClass:
+        with patch("src.agent.ChatGoogleGenerativeAI") as MockLLMClass:
             mock_llm = MagicMock()
             MockLLMClass.return_value = mock_llm
-            mock_llm.bind_tools.return_value = mock_llm # mock the bound llm
+            mock_llm.bind_tools.return_value = mock_llm  # mock the bound llm
 
             mock_response = AIMessage(content="Hello")
             mock_llm.invoke.return_value = mock_response
@@ -53,7 +57,10 @@ def test_chatbot_node_logic(mock_personality):
             # Now we need to actually run the 'chatbot' node function.
             # Since 'app' is the compiled graph, we can invoke it.
 
-            result = app.invoke({"messages": [HumanMessage(content="Hi")]}, config={"configurable": {"thread_id": "1"}})
+            result = app.invoke(
+                {"messages": [HumanMessage(content="Hi")]},
+                config={"configurable": {"thread_id": "1"}},
+            )
 
             assert result["messages"][-1].content == "Hello"
 
