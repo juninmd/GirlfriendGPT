@@ -1,7 +1,7 @@
 import tempfile
-from typing import Type
+from typing import Optional, Type, Any
 from langchain_core.tools import BaseTool
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, PrivateAttr
 from google import genai
 from google.genai import types
 from src.config import Config
@@ -15,15 +15,22 @@ class SelfieTool(BaseTool):
     name: str = "SelfieTool"
     description: str = "Generates a selfie based on the description. Use this when the user asks for a photo or selfie."
     args_schema: Type[BaseModel] = SelfieToolInput
+    _client: Optional[Any] = PrivateAttr(default=None)
+
+    def _get_client(self):
+        if self._client is None:
+            if Config.GOOGLE_API_KEY:
+                self._client = genai.Client(api_key=Config.GOOGLE_API_KEY)
+        return self._client
 
     def _run(self, description: str) -> str:
-        if not Config.GOOGLE_API_KEY:
+        client = self._get_client()
+        if not client:
              return "Image generation is not configured (missing GOOGLE_API_KEY)."
 
         print(f"[SelfieTool] Generating selfie for: {description}")
 
         try:
-            client = genai.Client(api_key=Config.GOOGLE_API_KEY)
             # Use 'imagen-3.0-generate-001' for high fidelity "2026" results.
             response = client.models.generate_images(
                 model='imagen-3.0-generate-001',
@@ -49,8 +56,37 @@ class SelfieTool(BaseTool):
             return f"Error generating selfie: {str(e)}"
 
     async def _arun(self, description: str) -> str:
-        # Async implementation
-        return self._run(description)
+        client = self._get_client()
+        if not client:
+             return "Image generation is not configured (missing GOOGLE_API_KEY)."
+
+        print(f"[SelfieTool] Generating selfie for: {description}")
+
+        try:
+            # Use 'imagen-3.0-generate-001' for high fidelity "2026" results.
+            # Using client.aio for async execution
+            response = await client.aio.models.generate_images(
+                model='imagen-3.0-generate-001',
+                prompt=description,
+                config=types.GenerateImagesConfig(
+                    number_of_images=1,
+                )
+            )
+
+            if response.generated_images and response.generated_images[0].image:
+                image_bytes = response.generated_images[0].image.image_bytes
+
+                if image_bytes:
+                    with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as f:
+                        f.write(image_bytes)
+                        return f"IMAGE_GENERATED:{f.name}"
+                else:
+                    return "Failed to generate image (no image bytes)."
+            else:
+                 return "Failed to generate image (no images returned)."
+
+        except Exception as e:
+            return f"Error generating selfie: {str(e)}"
 
 class VoiceToolInput(BaseModel):
     text: str = Field(description="The text to speak.")
