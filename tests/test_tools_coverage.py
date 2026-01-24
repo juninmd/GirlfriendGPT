@@ -68,11 +68,83 @@ class TestSelfieTool:
 
     @pytest.mark.asyncio
     async def test_arun(self):
-         tool = SelfieTool()
-         with patch.object(tool, "_run", return_value="success") as mock_run:
-             result = await tool._arun("test")
-             assert result == "success"
-             mock_run.assert_called_once_with("test")
+        with patch.object(Config, "GOOGLE_API_KEY", "dummy"):
+            with patch("src.tools.genai.Client") as MockClient:
+                # Mock aio.models.generate_images
+                mock_response = MagicMock()
+                mock_image = MagicMock()
+                mock_image.image.image_bytes = b"fake_bytes"
+                mock_response.generated_images = [mock_image]
+
+                # Setup async mock for generate_images
+                mock_generate = AsyncMock(return_value=mock_response)
+
+                # Mock client structure: client.aio.models.generate_images
+                mock_client_instance = MockClient.return_value
+                mock_client_instance.aio.models.generate_images = mock_generate
+
+                tool = SelfieTool()
+
+                with patch("src.tools.tempfile.NamedTemporaryFile") as MockTemp:
+                    mock_temp_file = MagicMock()
+                    mock_temp_file.name = "temp.png"
+                    MockTemp.return_value.__enter__.return_value = mock_temp_file
+
+                    result = await tool._arun("test prompt")
+
+                    assert "IMAGE_GENERATED:temp.png" in result
+                    mock_generate.assert_awaited_once()
+                    # Verify model and prompt
+                    args, kwargs = mock_generate.await_args
+                    assert kwargs['model'] == 'imagen-3.0-generate-001'
+                    assert kwargs['prompt'] == 'test prompt'
+
+    @pytest.mark.asyncio
+    async def test_arun_no_api_key(self):
+        with patch.object(Config, "GOOGLE_API_KEY", None):
+            tool = SelfieTool()
+            result = await tool._arun("test")
+            assert "missing GOOGLE_API_KEY" in result
+
+    @pytest.mark.asyncio
+    async def test_arun_exception(self):
+        with patch.object(Config, "GOOGLE_API_KEY", "dummy"):
+            with patch("src.tools.genai.Client") as MockClient:
+                mock_generate = AsyncMock(side_effect=Exception("Async Error"))
+                MockClient.return_value.aio.models.generate_images = mock_generate
+
+                tool = SelfieTool()
+                result = await tool._arun("test")
+                assert "Error generating selfie: Async Error" in result
+
+    @pytest.mark.asyncio
+    async def test_arun_failure_no_images(self):
+        with patch.object(Config, "GOOGLE_API_KEY", "dummy"):
+            with patch("src.tools.genai.Client") as MockClient:
+                mock_response = MagicMock()
+                mock_response.generated_images = []
+                mock_generate = AsyncMock(return_value=mock_response)
+                MockClient.return_value.aio.models.generate_images = mock_generate
+
+                tool = SelfieTool()
+                result = await tool._arun("test")
+                assert "Failed to generate image" in result
+
+    @pytest.mark.asyncio
+    async def test_arun_failure_no_image_bytes(self):
+        with patch.object(Config, "GOOGLE_API_KEY", "dummy"):
+            with patch("src.tools.genai.Client") as MockClient:
+                mock_response = MagicMock()
+                mock_image = MagicMock()
+                mock_image.image.image_bytes = None
+                mock_response.generated_images = [mock_image]
+
+                mock_generate = AsyncMock(return_value=mock_response)
+                MockClient.return_value.aio.models.generate_images = mock_generate
+
+                tool = SelfieTool()
+                result = await tool._arun("test")
+                assert "Failed to generate image" in result
 
 
 class TestVoiceTool:
