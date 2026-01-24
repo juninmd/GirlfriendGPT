@@ -4,10 +4,11 @@ import sys
 import os
 
 # Add src to path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from src.config import Personality, Config
 from src.agent import create_agent, tools
+
 
 class TestAgentOllama(unittest.TestCase):
     def setUp(self):
@@ -16,7 +17,7 @@ class TestAgentOllama(unittest.TestCase):
             byline="A test bot",
             identity=["I am a test bot"],
             behavior=["I behave nicely"],
-            profile_image=None
+            profile_image=None,
         )
 
     @patch("src.agent.ChatOllama")
@@ -28,9 +29,11 @@ class TestAgentOllama(unittest.TestCase):
         mock_instance.bind_tools.return_value = mock_instance
 
         # Mock Config to use ollama
-        with patch.object(Config, 'LLM_PROVIDER', 'ollama'), \
-             patch.object(Config, 'OLLAMA_MODEL', 'llama3-test'):
-             app = create_agent(self.personality)
+        with (
+            patch.object(Config, "LLM_PROVIDER", "ollama"),
+            patch.object(Config, "OLLAMA_MODEL", "llama3-test"),
+        ):
+            app = create_agent(self.personality)
 
         # Verify LLM was initialized with correct model
         mock_llm.assert_called_with(
@@ -53,19 +56,22 @@ class TestAgentOllama(unittest.TestCase):
         mock_instance.bind_tools.return_value = mock_instance
 
         # Mock Config to use google (default)
-        with patch.object(Config, 'LLM_PROVIDER', 'google'), \
-             patch.object(Config, 'GOOGLE_API_KEY', 'fake_key'):
-             create_agent(self.personality)
+        with (
+            patch.object(Config, "LLM_PROVIDER", "google"),
+            patch.object(Config, "GOOGLE_API_KEY", "fake_key"),
+        ):
+            create_agent(self.personality)
 
         # Verify LLM was initialized with gemini-2.5-pro
         mock_llm.assert_called_with(
             model="gemini-2.5-pro",
-            api_key='fake_key',
+            api_key="fake_key",
             temperature=0.8,
             max_tokens=None,
             timeout=None,
             max_retries=2,
         )
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

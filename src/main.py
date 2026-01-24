@@ -5,7 +5,13 @@ import os
 from typing import Dict, Any
 
 from telegram import Update
-from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
+from telegram.ext import (
+    Application,
+    CommandHandler,
+    MessageHandler,
+    filters,
+    ContextTypes,
+)
 from langchain_core.messages import HumanMessage, ToolMessage
 
 from src.config import Config, Personality
@@ -22,6 +28,7 @@ agents: Dict[str, Any] = {}
 # Global personalities
 personalities: Dict[str, Personality] = {}
 
+
 def get_agent_for_user(personality_name: str):
     if personality_name not in agents:
         p = personalities.get(personality_name.lower())
@@ -36,6 +43,7 @@ def get_agent_for_user(personality_name: str):
 
         agents[personality_name] = create_agent(p)
     return agents[personality_name]
+
 
 async def cli_loop():
     print("Starting CLI mode...")
@@ -76,11 +84,16 @@ async def cli_loop():
         except Exception as e:
             print(f"Error: {e}")
 
+
 # Telegram Bot Handlers
+
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if update.message:
-        await update.message.reply_text("Hello! I'm your AI companion, powered by the latest Gemini technology (2026 Edition). How are you doing today?")
+        await update.message.reply_text(
+            "Hello! I'm your AI companion, powered by the latest Gemini technology (2026 Edition). How are you doing today?"
+        )
+
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not update.effective_chat or not update.message or not update.message.text:
@@ -123,21 +136,27 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
                 break
 
         if last_human_idx != -1:
-            for msg in messages[last_human_idx+1:]:
+            for msg in messages[last_human_idx + 1 :]:
                 if isinstance(msg, ToolMessage):
                     content = str(msg.content)
                     if "AUDIO_GENERATED:" in content:
                         try:
                             path = content.split("AUDIO_GENERATED:")[1].strip()
-                            await context.bot.send_chat_action(chat_id=chat_id, action="upload_voice")
+                            await context.bot.send_chat_action(
+                                chat_id=chat_id, action="upload_voice"
+                            )
                             with open(path, "rb") as audio:
-                                await context.bot.send_voice(chat_id=chat_id, voice=audio)
+                                await context.bot.send_voice(
+                                    chat_id=chat_id, voice=audio
+                                )
 
                             # Cleanup
                             try:
                                 os.remove(path)
                             except Exception as e:
-                                logger.warning(f"Failed to remove temp file {path}: {e}")
+                                logger.warning(
+                                    f"Failed to remove temp file {path}: {e}"
+                                )
 
                         except Exception as e:
                             logger.error(f"Failed to send voice: {e}")
@@ -145,15 +164,21 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
                     if "IMAGE_GENERATED:" in content:
                         try:
                             path = content.split("IMAGE_GENERATED:")[1].strip()
-                            await context.bot.send_chat_action(chat_id=chat_id, action="upload_photo")
+                            await context.bot.send_chat_action(
+                                chat_id=chat_id, action="upload_photo"
+                            )
                             with open(path, "rb") as photo:
-                                await context.bot.send_photo(chat_id=chat_id, photo=photo)
+                                await context.bot.send_photo(
+                                    chat_id=chat_id, photo=photo
+                                )
 
                             # Cleanup
                             try:
                                 os.remove(path)
                             except Exception as e:
-                                logger.warning(f"Failed to remove temp file {path}: {e}")
+                                logger.warning(
+                                    f"Failed to remove temp file {path}: {e}"
+                                )
 
                         except Exception as e:
                             logger.error(f"Failed to send photo: {e}")
@@ -162,6 +187,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         logger.error(f"Error processing message: {e}")
         if update.message:
             await update.message.reply_text("I'm having trouble thinking right now.")
+
 
 async def bot_loop():
     if not Config.TELEGRAM_TOKEN:
@@ -175,10 +201,13 @@ async def bot_loop():
     application = Application.builder().token(Config.TELEGRAM_TOKEN).build()
 
     application.add_handler(CommandHandler("start", start))
-    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
+    application.add_handler(
+        MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message)
+    )
 
     print("Starting Telegram Bot polling...")
     await application.run_polling(allowed_updates=Update.ALL_TYPES)
+
 
 def main():
     parser = argparse.ArgumentParser(description="GirlfriendGPT 2026")
@@ -198,6 +227,7 @@ def main():
             asyncio.run(bot_loop())
     except KeyboardInterrupt:
         pass
+
 
 if __name__ == "__main__":
     main()  # pragma: no cover
