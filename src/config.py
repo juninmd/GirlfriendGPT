@@ -8,6 +8,7 @@ from pydantic import BaseModel
 # Load environment variables
 load_dotenv()
 
+
 class Personality(BaseModel):
     name: str
     byline: str
@@ -15,18 +16,21 @@ class Personality(BaseModel):
     behavior: List[str]
     profile_image: Optional[str] = None
 
+
 class Config:
     TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
     GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
     EDGE_TTS_VOICE = os.getenv("EDGE_TTS_VOICE", "en-US-AriaNeural")
 
     # New configuration for LLM provider
-    LLM_PROVIDER = os.getenv("LLM_PROVIDER", "google") # 'google' or 'ollama'
+    LLM_PROVIDER = os.getenv("LLM_PROVIDER", "google")  # 'google' or 'ollama'
     OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
-    OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3") # Default model for Ollama
+    OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3")  # Default model for Ollama
 
     @staticmethod
-    def load_personalities(personalities_dir: str = "src/personalities") -> Dict[str, Personality]:
+    def load_personalities(
+        personalities_dir: str = "src/personalities",
+    ) -> Dict[str, Personality]:
         personalities: Dict[str, Personality] = {}
         path = Path(personalities_dir)
         if not path.exists():

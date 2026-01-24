@@ -5,6 +5,7 @@ from src.config import Config
 
 # --- Tests for src/tools.py ---
 
+
 class TestSelfieTool:
     def test_run_no_api_key(self):
         with patch.object(Config, "GOOGLE_API_KEY", None):
@@ -20,7 +21,9 @@ class TestSelfieTool:
                 mock_image.image.image_bytes = b"fake_image_bytes"
                 mock_response.generated_images = [mock_image]
 
-                MockClient.return_value.models.generate_images.return_value = mock_response
+                MockClient.return_value.models.generate_images.return_value = (
+                    mock_response
+                )
 
                 tool = SelfieTool()
                 with patch("src.tools.tempfile.NamedTemporaryFile") as MockTemp:
@@ -37,7 +40,9 @@ class TestSelfieTool:
                 mock_response = MagicMock()
                 mock_response.generated_images = []
 
-                MockClient.return_value.models.generate_images.return_value = mock_response
+                MockClient.return_value.models.generate_images.return_value = (
+                    mock_response
+                )
 
                 tool = SelfieTool()
                 result = tool._run("a selfie")
@@ -51,7 +56,9 @@ class TestSelfieTool:
                 mock_image.image.image_bytes = None
                 mock_response.generated_images = [mock_image]
 
-                MockClient.return_value.models.generate_images.return_value = mock_response
+                MockClient.return_value.models.generate_images.return_value = (
+                    mock_response
+                )
 
                 tool = SelfieTool()
                 result = tool._run("a selfie")
@@ -60,7 +67,9 @@ class TestSelfieTool:
     def test_run_exception(self):
         with patch.object(Config, "GOOGLE_API_KEY", "dummy"):
             with patch("src.tools.genai.Client") as MockClient:
-                MockClient.return_value.models.generate_images.side_effect = Exception("API Error")
+                MockClient.return_value.models.generate_images.side_effect = Exception(
+                    "API Error"
+                )
 
                 tool = SelfieTool()
                 result = tool._run("a selfie")
@@ -68,11 +77,11 @@ class TestSelfieTool:
 
     @pytest.mark.asyncio
     async def test_arun(self):
-         tool = SelfieTool()
-         with patch.object(tool, "_run", return_value="success") as mock_run:
-             result = await tool._arun("test")
-             assert result == "success"
-             mock_run.assert_called_once_with("test")
+        tool = SelfieTool()
+        with patch.object(tool, "_run", return_value="success") as mock_run:
+            result = await tool._arun("test")
+            assert result == "success"
+            mock_run.assert_called_once_with("test")
 
 
 class TestVoiceTool:
@@ -103,7 +112,9 @@ class TestVoiceTool:
     @pytest.mark.asyncio
     async def test_arun_exception(self):
         with patch.object(Config, "EDGE_TTS_VOICE", "en-US"):
-            with patch("src.tools.edge_tts.Communicate", side_effect=Exception("TTS Error")):
+            with patch(
+                "src.tools.edge_tts.Communicate", side_effect=Exception("TTS Error")
+            ):
                 tool = VoiceTool()
                 result = await tool._arun("hello")
                 assert "Error generating voice: TTS Error" in result
@@ -123,5 +134,5 @@ class TestVoiceTool:
         tool = VoiceTool()
         # Mock asyncio.run to raise RuntimeError indicating loop is running
         with patch("asyncio.run", side_effect=RuntimeError("Loop running")):
-             result = tool._run("test")
-             assert "Async event loop already running" in result
+            result = tool._run("test")
+            assert "Async event loop already running" in result
