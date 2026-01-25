@@ -1,12 +1,14 @@
+import asyncio
 import tempfile
-from typing import Optional, Type, Any
-from langchain_core.tools import BaseTool
-from pydantic import BaseModel, Field, PrivateAttr
+from typing import Any, Optional, Type
+
+import edge_tts
 from google import genai
 from google.genai import types
+from langchain_core.tools import BaseTool
+from pydantic import BaseModel, Field, PrivateAttr
+
 from src.config import Config
-import edge_tts
-import asyncio
 
 
 class SelfieToolInput(BaseModel):
@@ -15,11 +17,14 @@ class SelfieToolInput(BaseModel):
 
 class SelfieTool(BaseTool):
     name: str = "SelfieTool"
-    description: str = "Generates a selfie based on the description. Use this when the user asks for a photo or selfie."
+    description: str = (
+        "Generates a selfie based on the description. "
+        "Use this when the user asks for a photo or selfie."
+    )
     args_schema: Type[BaseModel] = SelfieToolInput
     _client: Optional[Any] = PrivateAttr(default=None)
 
-    def _get_client(self):
+    def _get_client(self) -> Optional[Any]:
         if self._client is None:
             if Config.GOOGLE_API_KEY:
                 self._client = genai.Client(api_key=Config.GOOGLE_API_KEY)
@@ -28,7 +33,7 @@ class SelfieTool(BaseTool):
     def _run(self, description: str) -> str:
         client = self._get_client()
         if not client:
-             return "Image generation is not configured (missing GOOGLE_API_KEY)."
+            return "Image generation is not configured (missing GOOGLE_API_KEY)."
 
         print(f"[SelfieTool] Generating selfie for: {description}")
 
@@ -60,7 +65,7 @@ class SelfieTool(BaseTool):
     async def _arun(self, description: str) -> str:
         client = self._get_client()
         if not client:
-             return "Image generation is not configured (missing GOOGLE_API_KEY)."
+            return "Image generation is not configured (missing GOOGLE_API_KEY)."
 
         print(f"[SelfieTool] Generating selfie for: {description}")
 
@@ -68,11 +73,11 @@ class SelfieTool(BaseTool):
             # Use 'imagen-3.0-generate-001' for high fidelity "2026" results.
             # Using client.aio for async execution
             response = await client.aio.models.generate_images(
-                model='imagen-3.0-generate-001',
+                model="imagen-3.0-generate-001",
                 prompt=description,
                 config=types.GenerateImagesConfig(
                     number_of_images=1,
-                )
+                ),
             )
 
             if response.generated_images and response.generated_images[0].image:
@@ -85,7 +90,7 @@ class SelfieTool(BaseTool):
                 else:
                     return "Failed to generate image (no image bytes)."
             else:
-                 return "Failed to generate image (no images returned)."
+                return "Failed to generate image (no images returned)."
 
         except Exception as e:
             return f"Error generating selfie: {str(e)}"
@@ -127,4 +132,7 @@ class VoiceTool(BaseTool):
         except RuntimeError:
             # If loop is already running, we can't use asyncio.run.
             # Refactoring to full async architecture is best, but for now:
-            return "Error: Async event loop already running, cannot call synchronous _run. Please ensure the agent uses ainvoke."
+            return (
+                "Error: Async event loop already running, cannot call synchronous "
+                "_run. Please ensure the agent uses ainvoke."
+            )

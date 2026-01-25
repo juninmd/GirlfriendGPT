@@ -5,6 +5,7 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
   quality:
@@ -43,7 +44,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Run Tests
-      # Coverage is enforced via pytest.ini (addopts = --cov=src --cov-fail-under=100)
+      # Coverage is enforced via pyproject.toml (addopts = --cov=src --cov-fail-under=100)
       run: pytest
 
   render-check:
