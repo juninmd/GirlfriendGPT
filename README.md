@@ -5,17 +5,19 @@ Your personal AI companion, updated for the modern era using **Google Gemini**, 
 ## Features
 
 * **Google Gemini Integration**: Powered by the latest Gemini models (Gemini 2.5 Pro) for smart and fast conversations.
+* **Ollama Support**: Run locally with open-source models (Llama 3, Mistral, etc.) via Ollama.
 * **Custom Voice**: Uses `edge-tts` for high-quality, free text-to-speech.
 * **Telegram Bot**: Directly send and receive messages from your AI companion via Telegram.
 * **CLI Mode**: Chat with your companion directly in your terminal.
 * **Personality**: Customize the AI's personality via JSON files.
-* **Selfies**: AI is capable of generating selfies (mocked/extensible).
+* **Selfies**: AI is capable of generating selfies using **Google Imagen 3**.
 
 ## Prerequisites
 
 * Python 3.9+
 * Google Gemini API Key
 * (Optional) Telegram Bot Token
+* (Optional) Ollama (for local inference)
 
 ## Installation
 
@@ -30,6 +32,11 @@ Your personal AI companion, updated for the modern era using **Google Gemini**, 
    TELEGRAM_TOKEN=your_telegram_token
    # Optional: Configure voice (default: en-US-AriaNeural)
    EDGE_TTS_VOICE=en-US-AriaNeural
+
+   # Optional: Use Ollama (default: google)
+   # LLM_PROVIDER=ollama
+   # OLLAMA_BASE_URL=http://localhost:11434
+   # OLLAMA_MODEL=llama3
    ```
 
 ## Usage
@@ -67,6 +74,10 @@ Personalities are defined in `src/personalities/`. To add a new personality:
 ## Development
 
 We strictly enforce code quality and test coverage.
+
+### VS Code Dev Container
+
+This project includes a `.devcontainer` configuration. Open the folder in VS Code and click "Reopen in Container" to get a pre-configured environment with all dependencies and tools installed.
 
 ### Running Checks Locally
 
