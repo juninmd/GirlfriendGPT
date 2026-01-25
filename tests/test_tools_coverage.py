@@ -1,7 +1,9 @@
+from unittest.mock import AsyncMock, MagicMock, patch
+
 import pytest
-from unittest.mock import patch, MagicMock, AsyncMock
-from src.tools import SelfieTool, VoiceTool
+
 from src.config import Config
+from src.tools import SelfieTool, VoiceTool
 
 # --- Tests for src/tools.py ---
 
@@ -105,8 +107,8 @@ class TestSelfieTool:
                     mock_generate.assert_awaited_once()
                     # Verify model and prompt
                     args, kwargs = mock_generate.await_args
-                    assert kwargs['model'] == 'imagen-3.0-generate-001'
-                    assert kwargs['prompt'] == 'test prompt'
+                    assert kwargs["model"] == "imagen-3.0-generate-001"
+                    assert kwargs["prompt"] == "test prompt"
 
     @pytest.mark.asyncio
     async def test_arun_no_api_key(self):
@@ -192,7 +194,8 @@ class TestVoiceTool:
                 assert "Error generating voice: TTS Error" in result
 
     def test_run_success(self):
-        # This test is tricky because asyncio.run might clash with existing loop if not careful.
+        # This test is tricky because asyncio.run might clash with existing loop if
+        # not careful.
         # But pytest-asyncio handles loop management.
         # However, _run calls asyncio.run.
 
