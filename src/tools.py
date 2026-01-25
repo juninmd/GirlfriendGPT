@@ -28,7 +28,7 @@ class SelfieTool(BaseTool):
     def _run(self, description: str) -> str:
         client = self._get_client()
         if not client:
-             return "Image generation is not configured (missing GOOGLE_API_KEY)."
+            return "Image generation is not configured (missing GOOGLE_API_KEY)."
 
         print(f"[SelfieTool] Generating selfie for: {description}")
 
@@ -60,7 +60,7 @@ class SelfieTool(BaseTool):
     async def _arun(self, description: str) -> str:
         client = self._get_client()
         if not client:
-             return "Image generation is not configured (missing GOOGLE_API_KEY)."
+            return "Image generation is not configured (missing GOOGLE_API_KEY)."
 
         print(f"[SelfieTool] Generating selfie for: {description}")
 
@@ -68,11 +68,11 @@ class SelfieTool(BaseTool):
             # Use 'imagen-3.0-generate-001' for high fidelity "2026" results.
             # Using client.aio for async execution
             response = await client.aio.models.generate_images(
-                model='imagen-3.0-generate-001',
+                model="imagen-3.0-generate-001",
                 prompt=description,
                 config=types.GenerateImagesConfig(
                     number_of_images=1,
-                )
+                ),
             )
 
             if response.generated_images and response.generated_images[0].image:
@@ -85,7 +85,7 @@ class SelfieTool(BaseTool):
                 else:
                     return "Failed to generate image (no image bytes)."
             else:
-                 return "Failed to generate image (no images returned)."
+                return "Failed to generate image (no images returned)."
 
         except Exception as e:
             return f"Error generating selfie: {str(e)}"

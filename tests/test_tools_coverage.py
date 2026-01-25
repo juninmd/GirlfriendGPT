@@ -105,8 +105,8 @@ class TestSelfieTool:
                     mock_generate.assert_awaited_once()
                     # Verify model and prompt
                     args, kwargs = mock_generate.await_args
-                    assert kwargs['model'] == 'imagen-3.0-generate-001'
-                    assert kwargs['prompt'] == 'test prompt'
+                    assert kwargs["model"] == "imagen-3.0-generate-001"
+                    assert kwargs["prompt"] == "test prompt"
 
     @pytest.mark.asyncio
     async def test_arun_no_api_key(self):

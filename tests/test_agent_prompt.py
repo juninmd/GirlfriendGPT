@@ -1,14 +1,15 @@
 import unittest
-from unittest.mock import patch, MagicMock, ANY
+from unittest.mock import patch, MagicMock
 import sys
 import os
 from langchain_core.messages import HumanMessage, SystemMessage
 
 # Add src to path
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from src.config import Personality, Config
 from src.agent import create_agent
+
 
 class TestAgentPrompt(unittest.TestCase):
     def setUp(self):
@@ -17,7 +18,7 @@ class TestAgentPrompt(unittest.TestCase):
             byline="A bot from the future",
             identity=["I am a future bot"],
             behavior=["I predict things"],
-            profile_image=None
+            profile_image=None,
         )
 
     @patch("src.agent.ChatGoogleGenerativeAI")
@@ -34,12 +35,15 @@ class TestAgentPrompt(unittest.TestCase):
         mock_llm_with_tools.invoke.return_value = SystemMessage(content="Response")
 
         # Create the agent
-        with patch.object(Config, 'GOOGLE_API_KEY', 'fake_key'):
+        with patch.object(Config, "GOOGLE_API_KEY", "fake_key"):
             app = create_agent(self.personality)
 
         # Invoke the agent
         input_message = HumanMessage(content="Hello")
-        app.invoke({"messages": [input_message]}, config={"configurable": {"thread_id": "test"}})
+        app.invoke(
+            {"messages": [input_message]},
+            config={"configurable": {"thread_id": "test"}},
+        )
 
         # Verify that invoke was called on the LLM
         # The arguments to invoke should be a list of messages
@@ -54,5 +58,6 @@ class TestAgentPrompt(unittest.TestCase):
         self.assertIn("The current year is 2026", messages[0].content)
         self.assertIn("FutureBot", messages[0].content)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()
