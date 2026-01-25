@@ -8,8 +8,12 @@ from langgraph.graph.message import add_messages
 from langgraph.prebuilt import ToolNode, tools_condition
 from langgraph.checkpoint.memory import MemorySaver
 
+import logging
 from src.config import Config, Personality
 from src.tools import SelfieTool, VoiceTool
+
+# Configure logging
+logger = logging.getLogger(__name__)
 
 # Define the tools
 tools = [SelfieTool(), VoiceTool()]
@@ -24,6 +28,7 @@ def create_agent(personality: Personality):
     # Initialize LLM based on provider
     llm: Union[ChatOllama, ChatGoogleGenerativeAI]
     if Config.LLM_PROVIDER == "ollama":
+        logger.info(f"Initializing agent with Ollama model: {Config.OLLAMA_MODEL}")
         llm = ChatOllama(
             model=Config.OLLAMA_MODEL,
             base_url=Config.OLLAMA_BASE_URL,
@@ -31,9 +36,9 @@ def create_agent(personality: Personality):
         )
     else:
         # Default to Google Gemini
-        # Using gemini-2.5-pro as requested for 2026 context (Verified)
+        logger.info(f"Initializing agent with Google model: {Config.GOOGLE_MODEL}")
         llm = ChatGoogleGenerativeAI(
-            model="gemini-2.5-pro",
+            model=Config.GOOGLE_MODEL,
             api_key=Config.GOOGLE_API_KEY,
             temperature=0.8,
             max_tokens=None,
