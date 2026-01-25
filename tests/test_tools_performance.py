@@ -1,7 +1,8 @@
-import pytest
-from unittest.mock import patch, MagicMock
-from src.tools import SelfieTool
+from unittest.mock import MagicMock, patch
+
 from src.config import Config
+from src.tools import SelfieTool
+
 
 class TestSelfieToolPerf:
     def test_client_instantiation_count(self):
@@ -14,7 +15,9 @@ class TestSelfieToolPerf:
                 mock_image.image.image_bytes = b"fake_bytes"
                 mock_response.generated_images = [mock_image]
 
-                MockClient.return_value.models.generate_images.return_value = mock_response
+                MockClient.return_value.models.generate_images.return_value = (
+                    mock_response
+                )
 
                 tool = SelfieTool()
 

@@ -1,9 +1,11 @@
+from unittest.mock import AsyncMock, MagicMock, mock_open, patch
+
 import pytest
-from unittest.mock import patch, MagicMock, AsyncMock, mock_open
-from src.main import get_agent_for_user, cli_loop, start, handle_message, bot_loop, main
-from src.config import Config, Personality
+from langchain_core.messages import AIMessage, HumanMessage, ToolMessage
 from telegram import Update
-from langchain_core.messages import AIMessage, ToolMessage, HumanMessage
+
+from src.config import Config, Personality
+from src.main import bot_loop, cli_loop, get_agent_for_user, handle_message, main, start
 
 # --- Tests for src/main.py ---
 
@@ -301,27 +303,25 @@ async def test_handle_message_error():
         )
 
 
-@pytest.mark.asyncio
-async def test_bot_loop():
+def test_bot_loop():
     with patch.object(Config, "TELEGRAM_TOKEN", "fake_token"):
         with patch("src.main.Config.load_personalities", return_value={}):
             with patch("telegram.ext.Application.builder") as MockBuilder:
                 mock_app = MagicMock()
-                mock_app.run_polling = AsyncMock()
+                mock_app.run_polling = MagicMock()
                 MockBuilder.return_value.token.return_value.build.return_value = (
                     mock_app
                 )
 
-                await bot_loop()
+                bot_loop()
 
                 mock_app.run_polling.assert_called_once()
 
 
-@pytest.mark.asyncio
-async def test_bot_loop_no_token():
+def test_bot_loop_no_token():
     with patch.object(Config, "TELEGRAM_TOKEN", None):
         with patch("builtins.print") as mock_print:
-            await bot_loop()
+            bot_loop()
             mock_print.assert_called_with("Error: TELEGRAM_TOKEN not set.")
 
 
@@ -339,24 +339,25 @@ def test_main_cli():
 def test_main_bot():
     with patch("argparse.ArgumentParser.parse_args") as mock_args:
         mock_args.return_value.cli = False
-        with patch("src.main.bot_loop"):
+        with patch("src.main.bot_loop") as mock_bot_loop:
             with patch("asyncio.run") as mock_run:
                 main()
-                mock_run.assert_called()
+                mock_run.assert_not_called()
+                mock_bot_loop.assert_called_once()
 
 
 def test_main_keyboard_interrupt():
     with patch("argparse.ArgumentParser.parse_args") as mock_args:
         mock_args.return_value.cli = False
-        with patch("src.main.bot_loop"):
-            with patch("asyncio.run", side_effect=KeyboardInterrupt):
-                main()
-                # Should just exit gracefully
+        with patch("src.main.bot_loop", side_effect=KeyboardInterrupt):
+            main()
+            # Should just exit gracefully
 
 
 def test_main_execution():
     # To fix coverage for "if __name__ == '__main__': main()", we can cheat a bit
-    # since we can't easily run subprocess with coverage inside this env without messing things up.
+    # since we can't easily run subprocess with coverage inside this env without
+    # messing things up.
     # We already test main() logic in other tests.
     pass
 
