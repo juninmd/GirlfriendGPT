@@ -12,7 +12,6 @@ from src.agent import create_agent
 from src.config import Config, Personality
 
 
-
 class TestAgentPrompt(unittest.TestCase):
     def setUp(self):
         self.personality = Personality(
