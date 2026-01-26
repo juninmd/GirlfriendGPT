@@ -1,14 +1,12 @@
-import asyncio
 import tempfile
-from typing import Any, Optional, Type
-
-import edge_tts
-from google import genai
-from google.genai import types
+from typing import Optional, Type, Any
 from langchain_core.tools import BaseTool
 from pydantic import BaseModel, Field, PrivateAttr
-
+from google import genai
+from google.genai import types
 from src.config import Config
+import edge_tts
+import asyncio
 
 
 class SelfieToolInput(BaseModel):
@@ -17,14 +15,11 @@ class SelfieToolInput(BaseModel):
 
 class SelfieTool(BaseTool):
     name: str = "SelfieTool"
-    description: str = (
-        "Generates a selfie based on the description. "
-        "Use this when the user asks for a photo or selfie."
-    )
+    description: str = "Generates a selfie based on the description. Use this when the user asks for a photo or selfie."
     args_schema: Type[BaseModel] = SelfieToolInput
     _client: Optional[Any] = PrivateAttr(default=None)
 
-    def _get_client(self) -> Optional[Any]:
+    def _get_client(self):
         if self._client is None:
             if Config.GOOGLE_API_KEY:
                 self._client = genai.Client(api_key=Config.GOOGLE_API_KEY)
@@ -132,7 +127,4 @@ class VoiceTool(BaseTool):
         except RuntimeError:
             # If loop is already running, we can't use asyncio.run.
             # Refactoring to full async architecture is best, but for now:
-            return (
-                "Error: Async event loop already running, cannot call synchronous "
-                "_run. Please ensure the agent uses ainvoke."
-            )
+            return "Error: Async event loop already running, cannot call synchronous _run. Please ensure the agent uses ainvoke."

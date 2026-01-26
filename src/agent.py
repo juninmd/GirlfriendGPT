@@ -1,12 +1,12 @@
-from typing import Annotated, Any, Dict, TypedDict, Union
+from typing import Annotated, TypedDict, Union
 
 from langchain_core.messages import BaseMessage, SystemMessage
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_ollama import ChatOllama
-from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph import StateGraph
 from langgraph.graph.message import add_messages
 from langgraph.prebuilt import ToolNode, tools_condition
+from langgraph.checkpoint.memory import MemorySaver
 
 import logging
 from src.config import Config, Personality
@@ -24,7 +24,7 @@ class AgentState(TypedDict):
     messages: Annotated[list[BaseMessage], add_messages]
 
 
-def create_agent(personality: Personality) -> Any:
+def create_agent(personality: Personality):
     # Initialize LLM based on provider
     llm: Union[ChatOllama, ChatGoogleGenerativeAI]
     if Config.LLM_PROVIDER == "ollama":
@@ -64,12 +64,12 @@ If the user asks for a selfie or photo, use the SelfieTool.
 If the user asks for a voice message or you want to speak, use the VoiceTool.
 """
 
-    def chatbot(state: AgentState) -> Dict[str, Any]:
+    def chatbot(state: AgentState):
         messages = state["messages"]
         # Ensure system prompt is the first message if not present or needs update
-        # For simplicity in this graph, we assume the system message is injected at
-        # start of conversation or we prepend it here if we want to be stateless
-        # regarding system prompt. But langgraph state accumulates.
+        # For simplicity in this graph, we assume the system message is injected at start of conversation
+        # or we prepend it here if we want to be stateless regarding system prompt.
+        # But langgraph state accumulates.
 
         conversation_messages = [SystemMessage(content=system_prompt)] + messages
         response = llm_with_tools.invoke(conversation_messages)

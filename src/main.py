@@ -2,20 +2,20 @@ import argparse
 import asyncio
 import logging
 import os
-from typing import Any, Dict
+from typing import Dict, Any
 
-from langchain_core.messages import HumanMessage, ToolMessage
 from telegram import Update
 from telegram.ext import (
     Application,
     CommandHandler,
-    ContextTypes,
     MessageHandler,
     filters,
+    ContextTypes,
 )
+from langchain_core.messages import HumanMessage, ToolMessage
 
-from src.agent import create_agent
 from src.config import Config, Personality
+from src.agent import create_agent
 
 # Configure logging
 logging.basicConfig(
@@ -29,7 +29,7 @@ agents: Dict[str, Any] = {}
 personalities: Dict[str, Personality] = {}
 
 
-def get_agent_for_user(personality_name: str) -> Any:
+def get_agent_for_user(personality_name: str):
     if personality_name not in agents:
         p = personalities.get(personality_name.lower())
         if not p:
@@ -45,7 +45,7 @@ def get_agent_for_user(personality_name: str) -> Any:
     return agents[personality_name]
 
 
-async def cli_loop() -> None:
+async def cli_loop():
     print("Starting CLI mode...")
     # Load personalities
     global personalities
@@ -91,8 +91,7 @@ async def cli_loop() -> None:
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if update.message:
         await update.message.reply_text(
-            "Hello! I'm your AI companion, powered by the latest Gemini technology "
-            "(2026 Edition). How are you doing today?"
+            "Hello! I'm your AI companion, powered by the latest Gemini technology (2026 Edition). How are you doing today?"
         )
 
 
@@ -190,7 +189,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
             await update.message.reply_text("I'm having trouble thinking right now.")
 
 
-def bot_loop() -> None:
+async def bot_loop():
     if not Config.TELEGRAM_TOKEN:
         print("Error: TELEGRAM_TOKEN not set.")
         return
@@ -207,10 +206,10 @@ def bot_loop() -> None:
     )
 
     print("Starting Telegram Bot polling...")
-    application.run_polling(allowed_updates=Update.ALL_TYPES)
+    await application.run_polling(allowed_updates=Update.ALL_TYPES)
 
 
-def main() -> None:
+def main():
     parser = argparse.ArgumentParser(description="GirlfriendGPT 2026")
     parser.add_argument("--cli", action="store_true", help="Run in CLI mode")
     args = parser.parse_args()
@@ -225,7 +224,7 @@ def main() -> None:
         if args.cli:
             asyncio.run(cli_loop())
         else:
-            bot_loop()
+            asyncio.run(bot_loop())
     except KeyboardInterrupt:
         pass
 

@@ -1,10 +1,8 @@
-from unittest.mock import MagicMock, patch
-
 import pytest
-from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
-
+from unittest.mock import patch, MagicMock
 from src.agent import create_agent
-from src.config import Config, Personality
+from src.config import Personality, Config
+from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
 
 # --- Tests for src/agent.py ---
 

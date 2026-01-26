@@ -28,6 +28,8 @@ Your personal AI companion, updated for the modern era using **Google Gemini**, 
    ```bash
    GOOGLE_API_KEY=your_gemini_key
    TELEGRAM_TOKEN=your_telegram_token
+   # Optional: Configure model (default: gemini-2.5-pro)
+   GOOGLE_MODEL=gemini-2.5-pro
    # Optional: Configure voice (default: en-US-AriaNeural)
    EDGE_TTS_VOICE=en-US-AriaNeural
    ```
@@ -63,40 +65,6 @@ Personalities are defined in `src/personalities/`. To add a new personality:
      "profile_image": "optional/path.png"
    }
    ```
-
-## Development
-
-We strictly enforce code quality and test coverage.
-
-### Running Checks Locally
-
-1. **Install Dependencies**:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-2. **Linting & Formatting (Ruff)**:
-   ```bash
-   ruff check .
-   ruff format --check .
-   ```
-
-3. **Type Checking (Mypy)**:
-   ```bash
-   mypy src/
-   ```
-   Note: We enforce strict typing.
-
-4. **Security Check (Bandit)**:
-   ```bash
-   bandit -r src/
-   ```
-
-5. **Tests & Coverage**:
-   ```bash
-   pytest
-   ```
-   Coverage must be 100%. Configuration is in `pyproject.toml`.
 
 ## License
 MIT

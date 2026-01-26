@@ -1,16 +1,14 @@
-import os
-import sys
 import unittest
-from unittest.mock import MagicMock, patch
-
+from unittest.mock import patch, MagicMock
+import sys
+import os
 from langchain_core.messages import HumanMessage, SystemMessage
 
 # Add src to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
+from src.config import Personality, Config
 from src.agent import create_agent
-from src.config import Config, Personality
-
 
 
 class TestAgentPrompt(unittest.TestCase):

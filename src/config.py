@@ -1,8 +1,7 @@
-import json
 import os
+import json
+from typing import List, Dict, Optional
 from pathlib import Path
-from typing import Dict, List, Optional
-
 from dotenv import load_dotenv
 from pydantic import BaseModel
 
@@ -50,7 +49,7 @@ class Config:
         return personalities
 
     @staticmethod
-    def validate() -> None:
+    def validate():
         if Config.LLM_PROVIDER == "google" and not Config.GOOGLE_API_KEY:
             raise ValueError("GOOGLE_API_KEY environment variable is not set.")
         # Telegram token is optional for CLI mode, but generally required for the bot
