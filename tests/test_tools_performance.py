@@ -4,7 +4,6 @@ from src.config import Config
 from src.tools import SelfieTool
 
 
-
 class TestSelfieToolPerf:
     def test_client_instantiation_count(self):
         # Patch Config.GOOGLE_API_KEY to ensure tool attempts to create client
