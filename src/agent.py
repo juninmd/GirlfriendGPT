@@ -1,3 +1,4 @@
+import logging
 from typing import Annotated, Any, Dict, TypedDict, Union
 
 from langchain_core.messages import BaseMessage, SystemMessage
@@ -8,7 +9,6 @@ from langgraph.graph import StateGraph
 from langgraph.graph.message import add_messages
 from langgraph.prebuilt import ToolNode, tools_condition
 
-import logging
 from src.config import Config, Personality
 from src.tools import SelfieTool, VoiceTool
 
