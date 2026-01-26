@@ -128,11 +128,17 @@ class VoiceTool(BaseTool):
     def _run(self, text: str) -> str:
         # Fallback for sync execution, though not recommended in async app
         try:
+            try:
+                loop = asyncio.get_running_loop()
+            except RuntimeError:
+                loop = None
+
+            if loop and loop.is_running():
+                return (
+                    "Error: Async event loop already running, cannot call synchronous "
+                    "_run. Please ensure the agent uses ainvoke."
+                )
+
             return asyncio.run(self._arun(text))
-        except RuntimeError:
-            # If loop is already running, we can't use asyncio.run.
-            # Refactoring to full async architecture is best, but for now:
-            return (
-                "Error: Async event loop already running, cannot call synchronous "
-                "_run. Please ensure the agent uses ainvoke."
-            )
+        except Exception as e:
+            return f"Error: {e}"
