@@ -207,7 +207,17 @@ class TestVoiceTool:
 
     def test_run_loop_running_error(self):
         tool = VoiceTool()
-        # Mock asyncio.run to raise RuntimeError indicating loop is running
-        with patch("asyncio.run", side_effect=RuntimeError("Loop running")):
+        # Mock asyncio.get_running_loop to simulate existing loop
+        mock_loop = MagicMock()
+        mock_loop.is_running.return_value = True
+
+        with patch("src.tools.asyncio.get_running_loop", return_value=mock_loop):
             result = tool._run("test")
             assert "Async event loop already running" in result
+
+    def test_run_exception(self):
+        tool = VoiceTool()
+        # Mock asyncio.run to raise an exception to cover the outer try/except block
+        with patch("asyncio.run", side_effect=Exception("Run Error")):
+            result = tool._run("test")
+            assert "Error: Run Error" in result
