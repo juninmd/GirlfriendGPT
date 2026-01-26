@@ -1,102 +1,113 @@
-# GirlfriendGPT (2026 Edition)
+# GirlfriendGPT (Edição 2026)
 
-Your personal AI companion, updated for the modern era using **Google Gemini**, **LangGraph**, and **LangChain**.
+Sua companheira de IA pessoal, atualizada para a era moderna usando **Google Gemini**, **LangGraph** e **LangChain**.
 
-## Features
+## Funcionalidades
 
-* **Google Gemini Integration**: Powered by the latest Gemini models (Gemini 2.5 Pro) for smart and fast conversations.
-* **Custom Voice**: Uses `edge-tts` for high-quality, free text-to-speech.
-* **Telegram Bot**: Directly send and receive messages from your AI companion via Telegram.
-* **CLI Mode**: Chat with your companion directly in your terminal.
-* **Personality**: Customize the AI's personality via JSON files.
-* **Selfies**: AI is capable of generating selfies (mocked/extensible).
+* **Integração com Google Gemini**: Alimentado pelos modelos Gemini mais recentes (Gemini 2.5 Pro) para conversas inteligentes e rápidas.
+* **Suporte ao Ollama**: Execute localmente com modelos de código aberto (Llama 3, Mistral, etc.) via Ollama.
+* **Voz Personalizada**: Usa `edge-tts` para conversão de texto em fala gratuita e de alta qualidade.
+* **Bot do Telegram**: Envie e receba mensagens diretamente de sua companheira de IA via Telegram.
+* **Modo CLI**: Converse com sua companheira diretamente no terminal.
+* **Personalidade**: Personalize a personalidade da IA através de arquivos JSON.
+* **Selfies**: A IA é capaz de gerar selfies usando **Google Imagen 3**.
 
-## Prerequisites
+## Pré-requisitos
 
 * Python 3.9+
-* Google Gemini API Key
-* (Optional) Telegram Bot Token
+* Chave de API do Google Gemini
+* (Opcional) Token do Bot do Telegram
+* (Opcional) Ollama (para inferência local)
 
-## Installation
+## Instalação
 
-1. Clone the repository.
-2. Install dependencies:
+1. Clone o repositório.
+2. Instale as dependências:
    ```bash
    pip install -r requirements.txt
    ```
-3. Set up environment variables. Create a `.env` file in the root directory:
+3. Configure as variáveis de ambiente. Crie um arquivo `.env` no diretório raiz:
    ```bash
-   GOOGLE_API_KEY=your_gemini_key
-   TELEGRAM_TOKEN=your_telegram_token
-   # Optional: Configure voice (default: en-US-AriaNeural)
+   GOOGLE_API_KEY=sua_chave_gemini
+   TELEGRAM_TOKEN=seu_token_telegram
+   # Opcional: Configurar voz (padrão: en-US-AriaNeural)
    EDGE_TTS_VOICE=en-US-AriaNeural
+
+   # Opcional: Usar Ollama (padrão: google)
+   # LLM_PROVIDER=ollama
+   # OLLAMA_BASE_URL=http://localhost:11434
+   # OLLAMA_MODEL=llama3
    ```
 
-## Usage
+## Uso
 
-### CLI Mode (Local Testing)
-Chat with your companion in the terminal:
+### Modo CLI (Teste Local)
+Converse com sua companheira no terminal:
 ```bash
 python main.py --cli
 ```
-You will be prompted to select a personality.
+Você será solicitado a selecionar uma personalidade.
 
-### Telegram Bot
-Run the Telegram bot:
+### Bot do Telegram
+Execute o bot do Telegram:
 ```bash
 python main.py
 ```
-Send `/start` to your bot on Telegram to begin.
+Envie `/start` para o seu bot no Telegram para começar.
 
-## Personalities
+## Personalidades
 
-Personalities are defined in `src/personalities/`. To add a new personality:
+As personalidades são definidas em `src/personalities/`. Para adicionar uma nova personalidade:
 
-1. Create a JSON file (e.g., `jane.json`) in `src/personalities/`.
-2. Follow the structure of existing files:
+1. Crie um arquivo JSON (por exemplo, `jane.json`) em `src/personalities/`.
+2. Siga a estrutura dos arquivos existentes:
    ```json
    {
      "name": "Jane",
-     "byline": "Your adventurous friend",
-     "identity": ["You are Jane...", "You love hiking..."],
-     "behavior": ["You are cheerful...", "You use emojis..."],
-     "profile_image": "optional/path.png"
+     "byline": "Sua amiga aventureira",
+     "identity": ["Você é Jane...", "Você adora caminhar..."],
+     "behavior": ["Você é alegre...", "Você usa emojis..."],
+     "profile_image": "opcional/caminho.png"
    }
    ```
 
-## Development
+## Desenvolvimento
 
-We strictly enforce code quality and test coverage.
+Nós impomos estritamente a qualidade do código e a cobertura de testes.
 
-### Running Checks Locally
+### VS Code Dev Container
 
-1. **Install Dependencies**:
+Este projeto inclui uma configuração `.devcontainer`. Abra a pasta no VS Code e clique em "Reopen in Container" para obter um ambiente pré-configurado com todas as dependências e ferramentas instaladas.
+
+### Executando Verificações Localmente
+
+1. **Instalar Dependências**:
    ```bash
    pip install -r requirements.txt
    ```
 
-2. **Linting & Formatting (Ruff)**:
+2. **Linting e Formatação (Ruff)**:
    ```bash
    ruff check .
    ruff format --check .
    ```
 
-3. **Type Checking (Mypy)**:
+3. **Verificação de Tipos (Mypy)**:
    ```bash
    mypy src/
    ```
-   Note: We enforce strict typing.
+   Nota: Nós impomos tipagem estrita.
 
-4. **Security Check (Bandit)**:
+4. **Verificação de Segurança (Bandit)**:
    ```bash
    bandit -r src/
    ```
 
-5. **Tests & Coverage**:
+5. **Testes e Cobertura**:
    ```bash
    pytest
    ```
-   Coverage must be 100%. Configuration is in `pyproject.toml`.
+   A cobertura deve ser 100%. A configuração está em `pyproject.toml`.
 
-## License
+## Licença
 MIT
