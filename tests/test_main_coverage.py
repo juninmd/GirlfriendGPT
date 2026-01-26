@@ -376,31 +376,33 @@ async def test_cli_loop_missing_personalities_print():
 @pytest.mark.asyncio
 async def test_cli_loop_default_personality():
     # Test lines 61-64: input empty -> default sacha
-    with patch("builtins.input", side_effect=["", "quit"]):
-        with patch("src.main.Config.load_personalities", return_value={"sacha": "p"}):
-            with patch("src.main.create_agent") as mock_create:
-                mock_create.return_value = AsyncMock()
-                with patch("builtins.print") as mock_print:
-                    await cli_loop()
-                    # verify "Chatting with sacha"
-                    assert any(
-                        "Chatting with sacha" in str(c)
-                        for c in mock_print.call_args_list
-                    )
+    with patch.dict("src.main.agents", {}, clear=True):
+        with patch("builtins.input", side_effect=["", "quit"]):
+            with patch("src.main.Config.load_personalities", return_value={"sacha": "p"}):
+                with patch("src.main.create_agent") as mock_create:
+                    mock_create.return_value = AsyncMock()
+                    with patch("builtins.print") as mock_print:
+                        await cli_loop()
+                        # verify "Chatting with sacha"
+                        assert any(
+                            "Chatting with sacha" in str(c)
+                            for c in mock_print.call_args_list
+                        )
 
 
 @pytest.mark.asyncio
 async def test_cli_loop_invalid_personality():
     # Test lines 66-68: invalid input -> default sacha
-    with patch("builtins.input", side_effect=["invalid", "quit"]):
-        with patch("src.main.Config.load_personalities", return_value={"sacha": "p"}):
-            with patch("src.main.create_agent") as mock_create:
-                mock_create.return_value = AsyncMock()
-                with patch("builtins.print") as mock_print:
-                    await cli_loop()
-                    mock_print.assert_any_call(
-                        "Personality invalid not found. Using default."
-                    )
+    with patch.dict("src.main.agents", {}, clear=True):
+        with patch("builtins.input", side_effect=["invalid", "quit"]):
+            with patch("src.main.Config.load_personalities", return_value={"sacha": "p"}):
+                with patch("src.main.create_agent") as mock_create:
+                    mock_create.return_value = AsyncMock()
+                    with patch("builtins.print") as mock_print:
+                        await cli_loop()
+                        mock_print.assert_any_call(
+                            "Personality invalid not found. Using default."
+                        )
 
 
 @pytest.mark.asyncio
