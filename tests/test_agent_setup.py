@@ -1,13 +1,13 @@
-import unittest
-from unittest.mock import patch, MagicMock
-import sys
 import os
+import sys
+import unittest
+from unittest.mock import MagicMock, patch
 
 # Add src to path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from src.config import Personality, Config
 from src.agent import create_agent, tools
+from src.config import Config, Personality
 
 
 class TestAgentSetup(unittest.TestCase):

@@ -64,5 +64,39 @@ Personalities are defined in `src/personalities/`. To add a new personality:
    }
    ```
 
+## Development
+
+We strictly enforce code quality and test coverage.
+
+### Running Checks Locally
+
+1. **Install Dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+2. **Linting & Formatting (Ruff)**:
+   ```bash
+   ruff check .
+   ruff format --check .
+   ```
+
+3. **Type Checking (Mypy)**:
+   ```bash
+   mypy src/
+   ```
+   Note: We enforce strict typing.
+
+4. **Security Check (Bandit)**:
+   ```bash
+   bandit -r src/
+   ```
+
+5. **Tests & Coverage**:
+   ```bash
+   pytest
+   ```
+   Coverage must be 100%. Configuration is in `pyproject.toml`.
+
 ## License
 MIT

@@ -1,6 +1,8 @@
-from unittest.mock import patch, MagicMock
-from src.tools import SelfieTool
+from unittest.mock import MagicMock, patch
+
 from src.config import Config
+from src.tools import SelfieTool
+
 
 
 class TestSelfieToolPerf:
