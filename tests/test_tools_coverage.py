@@ -1,7 +1,9 @@
+from unittest.mock import AsyncMock, MagicMock, patch
+
 import pytest
-from unittest.mock import patch, MagicMock, AsyncMock
-from src.tools import SelfieTool, VoiceTool
+
 from src.config import Config
+from src.tools import SelfieTool, VoiceTool
 
 # --- Tests for src/tools.py ---
 
@@ -192,7 +194,8 @@ class TestVoiceTool:
                 assert "Error generating voice: TTS Error" in result
 
     def test_run_success(self):
-        # This test is tricky because asyncio.run might clash with existing loop if not careful.
+        # This test is tricky because asyncio.run might clash with existing loop if
+        # not careful.
         # But pytest-asyncio handles loop management.
         # However, _run calls asyncio.run.
 
