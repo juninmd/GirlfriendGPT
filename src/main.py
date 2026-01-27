@@ -217,7 +217,7 @@ def main() -> None:
 
     print("---------------------------------------")
     print("GirlfriendGPT - 2026 Edition")
-    print("Powered by Google Gemini 2.5 Pro")
+    print("Powered by Google Gemini 3.0 Pro")
     print("---------------------------------------")
 
     # Run async loop

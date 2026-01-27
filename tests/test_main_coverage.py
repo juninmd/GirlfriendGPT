@@ -378,7 +378,9 @@ async def test_cli_loop_default_personality():
     # Test lines 61-64: input empty -> default sacha
     with patch.dict("src.main.agents", {}, clear=True):
         with patch("builtins.input", side_effect=["", "quit"]):
-            with patch("src.main.Config.load_personalities", return_value={"sacha": "p"}):
+            with patch(
+                "src.main.Config.load_personalities", return_value={"sacha": "p"}
+            ):
                 with patch("src.main.create_agent") as mock_create:
                     mock_create.return_value = AsyncMock()
                     with patch("builtins.print") as mock_print:
@@ -395,7 +397,9 @@ async def test_cli_loop_invalid_personality():
     # Test lines 66-68: invalid input -> default sacha
     with patch.dict("src.main.agents", {}, clear=True):
         with patch("builtins.input", side_effect=["invalid", "quit"]):
-            with patch("src.main.Config.load_personalities", return_value={"sacha": "p"}):
+            with patch(
+                "src.main.Config.load_personalities", return_value={"sacha": "p"}
+            ):
                 with patch("src.main.create_agent") as mock_create:
                     mock_create.return_value = AsyncMock()
                     with patch("builtins.print") as mock_print:

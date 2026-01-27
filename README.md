@@ -4,7 +4,7 @@ Sua companheira de IA pessoal, atualizada para a era moderna usando **Google Gem
 
 ## Funcionalidades
 
-* **Integração com Google Gemini**: Alimentado pelos modelos Gemini mais recentes (Gemini 2.5 Pro) para conversas inteligentes e rápidas.
+* **Integração com Google Gemini**: Alimentado pelos modelos Gemini mais recentes (Gemini 3.0 Pro) para conversas inteligentes e rápidas.
 * **Suporte ao Ollama**: Execute localmente com modelos de código aberto (Llama 3, Mistral, etc.) via Ollama.
 * **Voz Personalizada**: Usa `edge-tts` para conversão de texto em fala gratuita e de alta qualidade.
 * **Bot do Telegram**: Envie e receba mensagens diretamente de sua companheira de IA via Telegram.
@@ -111,3 +111,5 @@ Este projeto inclui uma configuração `.devcontainer`. Abra a pasta no VS Code 
 
 ## Licença
 MIT
+
+Verified for 2026 update.
