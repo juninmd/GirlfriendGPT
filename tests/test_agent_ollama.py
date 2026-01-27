@@ -49,7 +49,7 @@ class TestAgentOllama(unittest.TestCase):
         self.assertIsNotNone(app)
 
     @patch("src.agent.ChatGoogleGenerativeAI")
-    def test_agent_creation_with_gemini_2_5(self, mock_llm):
+    def test_agent_creation_with_gemini_3_0(self, mock_llm):
         # Mock the LLM
         mock_instance = MagicMock()
         mock_llm.return_value = mock_instance
@@ -62,9 +62,9 @@ class TestAgentOllama(unittest.TestCase):
         ):
             create_agent(self.personality)
 
-        # Verify LLM was initialized with gemini-2.5-pro
+        # Verify LLM was initialized with gemini-3.0-pro
         mock_llm.assert_called_with(
-            model="gemini-2.5-pro",
+            model="gemini-3.0-pro",
             api_key="fake_key",
             temperature=0.8,
             max_tokens=None,
