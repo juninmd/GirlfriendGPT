@@ -35,7 +35,7 @@ def test_create_agent_google(mock_personality):
             with patch("src.agent.StateGraph"):
                 create_agent(mock_personality)
                 MockGoogle.assert_called_once()
-                assert MockGoogle.call_args[1]["model"] == "gemini-2.5-pro"
+                assert MockGoogle.call_args[1]["model"] == "gemini-3.0-pro"
 
 
 def test_chatbot_node_logic(mock_personality):
