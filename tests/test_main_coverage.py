@@ -328,7 +328,7 @@ def test_bot_loop_no_token():
 def test_main_cli():
     with patch("argparse.ArgumentParser.parse_args") as mock_args:
         mock_args.return_value.cli = True
-        with patch("src.main.cli_loop"):  # async func
+        with patch("src.main.cli_loop", new_callable=MagicMock):  # async func
             # main calls asyncio.run(cli_loop())
             # we mock asyncio.run
             with patch("asyncio.run") as mock_run:
