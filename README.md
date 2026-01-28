@@ -112,4 +112,4 @@ Este projeto inclui uma configuração `.devcontainer`. Abra a pasta no VS Code 
 ## Licença
 MIT
 
-Verified for 2026 update.
+Verified for 2026 update and Gemini integration.
