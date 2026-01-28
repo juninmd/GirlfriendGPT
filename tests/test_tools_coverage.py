@@ -219,5 +219,7 @@ class TestVoiceTool:
         tool = VoiceTool()
         # Mock asyncio.run to raise an exception to cover the outer try/except block
         with patch("asyncio.run", side_effect=Exception("Run Error")):
-            result = tool._run("test")
-            assert "Error: Run Error" in result
+            # Mock _arun to avoid creating a coroutine that is never awaited
+            with patch.object(tool, "_arun", new_callable=MagicMock):
+                result = tool._run("test")
+                assert "Error: Run Error" in result
