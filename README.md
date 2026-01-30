@@ -81,35 +81,21 @@ Nós impomos estritamente a qualidade do código e a cobertura de testes.
 
 Este projeto inclui uma configuração `.devcontainer`. Abra a pasta no VS Code e clique em "Reopen in Container" para obter um ambiente pré-configurado com todas as dependências e ferramentas instaladas.
 
-### Executando Verificações Localmente
+### Executando Verificações Localmente (Garantia de Qualidade)
 
-1. **Instalar Dependências**:
-   ```bash
-   pip install -r requirements.txt
-   ```
+Para garantir que seu código atenda a todos os padrões de qualidade (100% de cobertura, linting, segurança e tipagem), execute o script de verificação:
 
-2. **Linting e Formatação (Ruff)**:
-   ```bash
-   ruff check .
-   ruff format --check .
-   ```
+```bash
+chmod +x scripts/verify.sh
+./scripts/verify.sh
+```
 
-3. **Verificação de Tipos (Mypy)**:
-   ```bash
-   mypy src/
-   ```
-   Nota: Nós impomos tipagem estrita.
-
-4. **Verificação de Segurança (Bandit)**:
-   ```bash
-   bandit -r src/
-   ```
-
-5. **Testes e Cobertura**:
-   ```bash
-   pytest
-   ```
-   A cobertura deve ser 100%. A configuração está em `pyproject.toml`.
+Este script automatiza as seguintes verificações:
+1. **Instalação de Dependências**: Garante que o ambiente esteja atualizado.
+2. **Linting e Formatação (Ruff)**: Verifica estilo e erros de código.
+3. **Verificação de Tipos (Mypy)**: Garante a tipagem estrita em `src/`.
+4. **Verificação de Segurança (Bandit)**: Busca por vulnerabilidades comuns.
+5. **Testes e Cobertura**: Executa `pytest` e falha se a cobertura for inferior a 100%.
 
 ## Licença
 MIT
