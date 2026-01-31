@@ -97,6 +97,10 @@ Este script automatiza as seguintes verificações:
 4. **Verificação de Segurança (Bandit)**: Busca por vulnerabilidades comuns.
 5. **Testes e Cobertura**: Executa `pytest` e falha se a cobertura for inferior a 100%.
 
+### Integração Contínua (CI)
+
+O projeto possui um pipeline automatizado no GitHub Actions (`.github/workflows/ci.yml`) que executa todas as verificações acima (linting, formatação, tipagem, segurança e testes com 100% de cobertura) a cada *push* ou *pull request* para a branch `main`. Isso garante que o código no repositório esteja sempre estável e seguro.
+
 ## Licença
 MIT
 
