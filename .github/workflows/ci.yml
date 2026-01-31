@@ -1,4 +1,5 @@
 name: GirlfriendGPT CI
+# Ensures 100% test coverage and code quality checks
 
 on:
   push:
