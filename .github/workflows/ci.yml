@@ -28,14 +28,6 @@ jobs:
         pip install -r requirements.txt
     - name: Run Pre-commit Hooks
       run: pre-commit run --all-files
-    - name: Lint with Ruff
-      run: ruff check .
-    - name: Format Check with Ruff
-      run: ruff format --check .
-    - name: Security Check with Bandit
-      run: bandit -r src/
-    - name: Type Check with Mypy
-      run: mypy src/
 
   test:
     runs-on: ubuntu-latest
