@@ -90,9 +90,15 @@ async def cli_loop() -> None:
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if update.message:
+        provider = Config.LLM_PROVIDER
+        model_name = (
+            Config.GOOGLE_MODEL if provider == "google" else Config.OLLAMA_MODEL
+        )
+        tech_name = "Gemini" if provider == "google" else "Ollama"
+
         await update.message.reply_text(
-            "Hello! I'm your AI companion, powered by the latest Gemini technology "
-            "(2026 Edition). How are you doing today?"
+            f"Hello! I'm your AI companion, powered by the latest {tech_name} "
+            f"technology ({model_name} - 2026 Edition). How are you doing today?"
         )
 
 
@@ -217,7 +223,9 @@ def main() -> None:
 
     print("---------------------------------------")
     print("GirlfriendGPT - 2026 Edition")
-    print("Powered by Google Gemini 3.0 Pro")
+    provider = Config.LLM_PROVIDER
+    model = Config.GOOGLE_MODEL if provider == "google" else Config.OLLAMA_MODEL
+    print(f"Powered by {provider.title()} ({model})")
     print("---------------------------------------")
 
     # Run async loop
