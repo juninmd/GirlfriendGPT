@@ -126,14 +126,33 @@ async def test_cli_loop_error(mock_agent):
 
 
 @pytest.mark.asyncio
-async def test_start():
+async def test_start_google():
     update = MagicMock(spec=Update)
     update.message.reply_text = AsyncMock()
     context = MagicMock()
 
-    await start(update, context)
-    update.message.reply_text.assert_called_once()
-    assert "Gemini" in update.message.reply_text.call_args[0][0]
+    with patch("src.main.Config.LLM_PROVIDER", "google"):
+        with patch("src.main.Config.GOOGLE_MODEL", "gemini-3.0-pro"):
+            await start(update, context)
+            update.message.reply_text.assert_called_once()
+            args = update.message.reply_text.call_args[0][0]
+            assert "Gemini" in args
+            assert "gemini-3.0-pro" in args
+
+
+@pytest.mark.asyncio
+async def test_start_ollama():
+    update = MagicMock(spec=Update)
+    update.message.reply_text = AsyncMock()
+    context = MagicMock()
+
+    with patch("src.main.Config.LLM_PROVIDER", "ollama"):
+        with patch("src.main.Config.OLLAMA_MODEL", "llama3"):
+            await start(update, context)
+            update.message.reply_text.assert_called_once()
+            args = update.message.reply_text.call_args[0][0]
+            assert "Ollama" in args
+            assert "llama3" in args
 
 
 @pytest.mark.asyncio
