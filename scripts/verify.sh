@@ -6,6 +6,7 @@ echo "Running Verification Script (GirlfriendGPT 2026)"
 echo "---------------------------------------"
 
 echo "Step 1: Installing dependencies..."
+pip install --upgrade pip
 pip install -r requirements.txt
 
 echo "Step 2: Running Pre-commit hooks (Linting, Formatting, Types, Security)..."
