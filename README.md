@@ -1,6 +1,7 @@
 # GirlfriendGPT (Edição 2026)
 
 ![GirlfriendGPT CI](https://github.com/juninmd/GirlfriendGPT/actions/workflows/ci.yml/badge.svg)
+**Última verificação: Fevereiro de 2026**
 
 Sua companheira de IA pessoal, atualizada para a era moderna usando **Google Gemini**, **LangGraph** e **LangChain**.
 
