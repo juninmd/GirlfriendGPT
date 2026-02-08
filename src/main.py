@@ -98,7 +98,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 
         await update.message.reply_text(
             f"Hello! I'm your AI companion, powered by the latest {tech_name} "
-            f"technology ({model_name} - 2026 Edition). How are you doing today?"
+            f"technology ({model_name} - {Config.CURRENT_YEAR} Edition). "
+            f"How are you doing today?"
         )
 
 
@@ -217,12 +218,12 @@ def bot_loop() -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="GirlfriendGPT 2026")
+    parser = argparse.ArgumentParser(description=f"GirlfriendGPT {Config.CURRENT_YEAR}")
     parser.add_argument("--cli", action="store_true", help="Run in CLI mode")
     args = parser.parse_args()
 
     print("---------------------------------------")
-    print("GirlfriendGPT - 2026 Edition")
+    print(f"GirlfriendGPT - {Config.CURRENT_YEAR} Edition")
     provider = Config.LLM_PROVIDER
     model = Config.GOOGLE_MODEL if provider == "google" else Config.OLLAMA_MODEL
     print(f"Powered by {provider.title()} ({model})")
