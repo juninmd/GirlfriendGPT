@@ -50,7 +50,7 @@ def create_agent(personality: Personality) -> Any:
     llm_with_tools = llm.bind_tools(tools)
 
     # System prompt
-    system_prompt = f"""The current year is 2026.
+    system_prompt = f"""The current year is {Config.CURRENT_YEAR}.
 You are {personality.name}, {personality.byline}.
 
 Who you are:
