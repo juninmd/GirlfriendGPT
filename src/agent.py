@@ -25,7 +25,7 @@ class AgentState(TypedDict):
 
 
 def create_agent(personality: Personality) -> Any:
-    # Initialize LLM based on provider
+    # Initialize LLM based on provider (2026 Edition with LangGraph)
     llm: Union[ChatOllama, ChatGoogleGenerativeAI]
     if Config.LLM_PROVIDER == "ollama":
         logger.info(f"Initializing agent with Ollama model: {Config.OLLAMA_MODEL}")

@@ -38,7 +38,7 @@ class SelfieTool(BaseTool):
         print(f"[SelfieTool] Generating selfie for: {description}")
 
         try:
-            # Use 'imagen-3.0-generate-001' for high fidelity "2026" results.
+            # Use 'imagen-3.0-generate-001' (Imagen 3) for high fidelity "2026" results.
             response = client.models.generate_images(
                 model="imagen-3.0-generate-001",
                 prompt=description,

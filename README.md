@@ -102,7 +102,15 @@ Este script automatiza as seguintes verificações:
 
 O projeto possui um pipeline automatizado no GitHub Actions (`.github/workflows/ci.yml`) que executa todas as verificações acima (linting, formatação, tipagem, segurança e testes com 100% de cobertura) a cada *push* ou *pull request* para a branch `main`. Isso garante que o código no repositório esteja sempre estável e seguro.
 
+## Histórico de Alterações
+
+### Edição 2026 (Atual)
+* Atualização completa para o ano de 2026.
+* Integração padrão com **Google Gemini 3.0 Pro**.
+* Geração de imagens com **Imagen 3**.
+* Atualização das personalidades para refletir o passar do tempo (+2 anos).
+* Remoção de dependências legadas (Steamship, Streamlit).
+* Refatoração para usar `langgraph` e `langchain-google-genai`.
+
 ## Licença
 MIT
-
-Verified for 2026 update and Gemini integration.
