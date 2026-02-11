@@ -25,7 +25,7 @@ class Config:
 
     # New configuration for LLM provider
     LLM_PROVIDER = os.getenv("LLM_PROVIDER", "google")  # 'google' or 'ollama'
-    GOOGLE_MODEL = os.getenv("GOOGLE_MODEL", "gemini-3.0-pro")  # 2026 Default
+    GOOGLE_MODEL = os.getenv("GOOGLE_MODEL", "gemini-3.0-pro")  # 2026 Default (Gemini)
     OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
     OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3")  # Default model for Ollama
 
