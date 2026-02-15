@@ -68,3 +68,13 @@ def test_config_validate_fail_google():
                 ValueError, match="GOOGLE_API_KEY environment variable is not set"
             ):
                 Config.validate()
+
+
+def test_config_2026_defaults():
+    """Ensure the configuration defaults to 2026 settings."""
+    assert Config.CURRENT_YEAR == 2026
+    # Assuming no environment variables override these defaults during test execution
+    # or that the environment is set up to match the expected defaults.
+    # We can check if they are set to the expected values.
+    assert Config.GOOGLE_MODEL == "gemini-3.0-pro"
+    assert Config.LLM_PROVIDER == "google"
