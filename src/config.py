@@ -29,7 +29,7 @@ class Config:
     OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
     OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3")  # Default model for Ollama
 
-    CURRENT_YEAR = 2026
+    CURRENT_YEAR = 2026  # Updated for 2026 timeline
 
     @staticmethod
     def load_personalities(
