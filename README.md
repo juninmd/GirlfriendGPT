@@ -29,17 +29,14 @@ Sua companheira de IA pessoal, atualizada para a era moderna usando **Google Gem
    ```bash
    pip install -r requirements.txt
    ```
-3. Configure as variáveis de ambiente. Crie um arquivo `.env` no diretório raiz:
+3. Configure as variáveis de ambiente. Copie o arquivo de exemplo:
+   ```bash
+   cp .env.example .env
+   ```
+   Edite o arquivo `.env` com suas chaves:
    ```bash
    GOOGLE_API_KEY=sua_chave_gemini
    TELEGRAM_TOKEN=seu_token_telegram
-   # Opcional: Configurar voz (padrão: en-US-AriaNeural)
-   EDGE_TTS_VOICE=en-US-AriaNeural
-
-   # Opcional: Usar Ollama (padrão: google)
-   # LLM_PROVIDER=ollama
-   # OLLAMA_BASE_URL=http://localhost:11434
-   # OLLAMA_MODEL=llama3
    ```
 
 ## Uso
