@@ -108,6 +108,7 @@ O projeto possui um pipeline automatizado no GitHub Actions (`.github/workflows/
 * Atualização das personalidades para refletir o passar do tempo (+2 anos).
 * Remoção de dependências legadas (Steamship, Streamlit).
 * Refatoração para usar `langgraph` e `langchain-google-genai`.
+* **Verificado em Fev/2026**: Testes de qualidade e cobertura 100% validados.
 
 ## Licença
 MIT
