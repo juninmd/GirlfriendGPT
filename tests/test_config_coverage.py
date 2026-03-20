@@ -70,11 +70,16 @@ def test_config_validate_fail_google():
                 Config.validate()
 
 
-def test_config_2026_defaults():
+def test_config_2026_defaults(monkeypatch):
     """Ensure the configuration defaults to 2026 settings."""
+    monkeypatch.delenv("GOOGLE_MODEL", raising=False)
+    monkeypatch.delenv("LLM_PROVIDER", raising=False)
+
+    import importlib
+    import src.config
+    importlib.reload(src.config)
+    Config = src.config.Config
+
     assert Config.CURRENT_YEAR == 2026
-    # Assuming no environment variables override these defaults during test execution
-    # or that the environment is set up to match the expected defaults.
-    # We can check if they are set to the expected values.
     assert Config.GOOGLE_MODEL == "gemini-3.0-pro"
     assert Config.LLM_PROVIDER == "google"
