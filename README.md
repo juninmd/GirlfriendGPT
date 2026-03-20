@@ -34,4 +34,3 @@ Sua companheira de IA pessoal, atualizada para a era moderna usando **Google Gem
    cp .env.example .env
    ```
    Edite o arquivo `.env` e preencha os valores para `GOOGLE_API_KEY` e `TELEGRAM_TOKEN`.
-MIT
