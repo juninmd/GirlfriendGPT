@@ -34,10 +34,6 @@ Sua companheira de IA pessoal, atualizada para a era moderna usando **Google Gem
    cp .env.example .env
    ```
    Edite o arquivo `.env` e preencha os valores para `GOOGLE_API_KEY` e `TELEGRAM_TOKEN`.
-
-1. Crie um arquivo JSON (por exemplo, `jane.json`) em `src/personalities/`.
-2. Siga a estrutura dos arquivos existentes:
-   ```json
    {
      "name": "Jane",
      "byline": "Sua amiga aventureira",
