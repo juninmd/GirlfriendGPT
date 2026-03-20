@@ -33,11 +33,7 @@ Sua companheira de IA pessoal, atualizada para a era moderna usando **Google Gem
    ```bash
    cp .env.example .env
    ```
-   Edite o arquivo `.env` com suas chaves:
-   ```bash
-   GOOGLE_API_KEY=sua_chave_gemini
-   TELEGRAM_TOKEN=seu_token_telegram
-   ```
+   Edite o arquivo `.env` e preencha os valores para `GOOGLE_API_KEY` e `TELEGRAM_TOKEN`.
 
 ## Uso
 
