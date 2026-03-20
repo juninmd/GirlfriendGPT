@@ -34,10 +34,6 @@ Sua companheira de IA pessoal, atualizada para a era moderna usando **Google Gem
    cp .env.example .env
    ```
    Edite o arquivo `.env` e preencha os valores para `GOOGLE_API_KEY` e `TELEGRAM_TOKEN`.
-
-```bash
-chmod +x scripts/verify.sh
-./scripts/verify.sh
 ```
 
 Este script automatiza as seguintes verificações:
