@@ -34,10 +34,6 @@ Sua companheira de IA pessoal, atualizada para a era moderna usando **Google Gem
    cp .env.example .env
    ```
    Edite o arquivo `.env` e preencha os valores para `GOOGLE_API_KEY` e `TELEGRAM_TOKEN`.
-
-## Histórico de Alterações
-
-### Edição 2026 (Atual)
 * Atualização completa para o ano de 2026.
 * Integração padrão com **Google Gemini 3.0 Pro**.
 * Geração de imagens com **Imagen 3**.
