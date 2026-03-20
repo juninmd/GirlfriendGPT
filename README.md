@@ -34,10 +34,6 @@ Sua companheira de IA pessoal, atualizada para a era moderna usando **Google Gem
    cp .env.example .env
    ```
    Edite o arquivo `.env` e preencha os valores para `GOOGLE_API_KEY` e `TELEGRAM_TOKEN`.
-```
-
-Este script automatiza as seguintes verificações:
-1. **Instalação de Dependências**: Garante que o ambiente esteja atualizado.
 2. **Linting e Formatação (Ruff)**: Verifica estilo e erros de código.
 3. **Verificação de Tipos (Mypy)**: Garante a tipagem estrita em `src/`.
 4. **Verificação de Segurança (Bandit)**: Busca por vulnerabilidades comuns.
