@@ -35,10 +35,6 @@ Sua companheira de IA pessoal, atualizada para a era moderna usando **Google Gem
    ```
    Edite o arquivo `.env` e preencha os valores para `GOOGLE_API_KEY` e `TELEGRAM_TOKEN`.
 
-## Desenvolvimento
-
-Nós impomos estritamente a qualidade do código e a cobertura de testes.
-
 ### VS Code Dev Container
 
 Este projeto inclui uma configuração `.devcontainer`. Abra a pasta no VS Code e clique em "Reopen in Container" para obter um ambiente pré-configurado com todas as dependências e ferramentas instaladas.
