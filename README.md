@@ -35,10 +35,6 @@ Sua companheira de IA pessoal, atualizada para a era moderna usando **Google Gem
    ```
    Edite o arquivo `.env` e preencha os valores para `GOOGLE_API_KEY` e `TELEGRAM_TOKEN`.
 
-### Executando Verificações Localmente (Garantia de Qualidade)
-
-Para garantir que seu código atenda a todos os padrões de qualidade (100% de cobertura, linting, segurança e tipagem), execute o script de verificação:
-
 ```bash
 chmod +x scripts/verify.sh
 ./scripts/verify.sh
