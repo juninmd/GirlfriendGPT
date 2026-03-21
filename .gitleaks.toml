@@ -1,0 +1,9 @@
+[[allowlist]]
+description = "False positive: aws-access-token in src/agent/tools/video_message.py"
+rules = ["aws-access-token"]
+paths = ["src/agent/tools/video_message.py"]
+
+[[allowlist]]
+description = "False positive: telegram-bot-api-token in deploy.py"
+rules = ["telegram-bot-api-token"]
+paths = ["deploy.py"]
