@@ -488,3 +488,8 @@ def test_config_2026_defaults(monkeypatch):
     assert Config.CURRENT_YEAR == 2026
     assert Config.GOOGLE_MODEL == "gemini-3.0-pro"
     assert Config.LLM_PROVIDER == "google"
+    Config = src.config.Config
+
+    assert Config.CURRENT_YEAR == 2026
+    assert Config.GOOGLE_MODEL == "gemini-3.0-pro"
+    assert Config.LLM_PROVIDER == "google"
