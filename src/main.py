@@ -91,15 +91,15 @@ async def cli_loop() -> None:
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if update.message:
         provider = Config.LLM_PROVIDER
-        model_name = (
-            Config.GOOGLE_MODEL if provider == "google" else Config.OLLAMA_MODEL
-        )
         tech_name = "Gemini" if provider == "google" else "Ollama"
 
-        await update.message.reply_text(
-            f"Hello! I'm your AI companion, powered by the latest {tech_name} "
-            f"technology ({model_name} - {Config.CURRENT_YEAR} Edition). "
-            f"How are you doing today?"
+        await update.message.reply_html(
+            f"🌸 <b>COMPANHEIRA IA</b>\n"
+            f"──────────────────────\n"
+            f"Olá! Sou sua companheira virtual, equipada com a mais recente tecnologia {tech_name} ({Config.CURRENT_YEAR}).\n\n"
+            f"Estou aqui para conversar, ouvir e te fazer companhia. Como você está hoje?\n\n"
+            f"──────────────────────\n"
+            f"<i>Sempre aqui por você.</i>"
         )
 
 
